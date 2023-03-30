@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: nn-trainer
+    build: ./nn_trainer
+    command: python ./src/main.py
+    volumes:
+      - ./nn_trainer/:/app
+    env_file: .env
