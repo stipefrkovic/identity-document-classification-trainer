@@ -1,26 +1,41 @@
 from abc import ABC, abstractmethod
-from tflite_model_maker.image_classifier import DataLoader
+
+import tensorflow as tf
+import os
 
 
 class DatasetCreator(ABC):
+    @abstractmethod
+    def create_dataset(self) -> dict:
+        pass
 
-  @abstractmethod
-  def buildDataset() -> dict:
-    pass
-  
-class TfLiteDatasetCreator(DatasetCreator):
-  
-  def __init__(self, path: str) -> None:
-    self.dataset_path =  path
-  
-  def buildDataset(self) -> dict:
-    """Builds the dataset from the folder at the provided path.
+
+class KerasDatasetCreator(DatasetCreator):
+    def __init__(self, path=os.getcwd() + '/nn_trainer/dataset', image_size=(224, 224), batch_size=1) -> None:
+        self.dataset_path = path
+        self.image_size = image_size
+        self.batch_size = batch_size
+
+    def create_dataset(self) -> dict:
+        """Creates the dataset from the folder at the provided path.
 
     Returns:
         dict: {
           dataset: Dataset
         }
     """
-    return {
-      "dataset":DataLoader.from_folder(self.dataset_path)
-    }
+        dataset = tf.keras.utils.image_dataset_from_directory(self.dataset_path,
+                                                              shuffle=True,
+                                                              batch_size=self.batch_size,
+                                                              image_size=self.image_size)
+        train_dataset, test_dataset = tf.keras.utils.split_dataset(dataset,
+                                                                   left_size=0.8)
+        reduced_train_dataset, validation_dataset = tf.keras.utils.split_dataset(train_dataset,
+                                                                                 left_size=0.8)
+        print(int(reduced_train_dataset.cardinality()))
+        print(int(validation_dataset.cardinality()))
+        print(int(test_dataset.cardinality()))
+
+        return {
+            "dataset": dataset
+        }
