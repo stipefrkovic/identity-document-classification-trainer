@@ -12,7 +12,7 @@ class DatasetCreator(ABC):
         pass
 
 
-class KerasDatasetCreator(DatasetCreator):
+class KerasEfficientNetDatasetCreator(DatasetCreator):
     def __init__(self, path=os.getcwd() + '/nn_trainer/dataset', image_size=(224, 224), batch_size=1) -> None:
         self.dataset_path = path
         self.image_size = image_size
