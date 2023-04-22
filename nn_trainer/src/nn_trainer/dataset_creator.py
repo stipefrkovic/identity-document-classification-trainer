@@ -30,18 +30,8 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
         dataset = tf.keras.utils.image_dataset_from_directory(self.dataset_path,
                                                               shuffle=True,
                                                               batch_size=self.batch_size,
-                                                              image_size=self.image_size)
-        train_dataset, test_dataset = tf.keras.utils.split_dataset(dataset,
-                                                                   left_size=0.8)
-        reduced_train_dataset, validation_dataset = tf.keras.utils.split_dataset(train_dataset,
-                                                                                 left_size=0.8)
-        print(int(reduced_train_dataset.cardinality()))
-        print(int(validation_dataset.cardinality()))
-        print(int(test_dataset.cardinality()))
-
-        # train_dataset = train_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-        # validation_dataset = validation_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-        # test_dataset = test_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+                                                              image_size=self.image_size,
+                                                              label_mode="categorical")
 
         # for image_batch, labels_batch in dataset:
         #     print(image_batch.shape)
@@ -71,6 +61,18 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
             plt.imshow(aug_img[0].numpy().astype("uint8"))
             plt.axis("off")
         plt.show()
+
+        # train_dataset, test_dataset = tf.keras.utils.split_dataset(dataset,
+        #                                                            left_size=0.8)
+        # reduced_train_dataset, validation_dataset = tf.keras.utils.split_dataset(train_dataset,
+        #                                                                          left_size=0.8)
+        # print(int(reduced_train_dataset.cardinality()))
+        # print(int(validation_dataset.cardinality()))
+        # print(int(test_dataset.cardinality()))
+
+        # train_dataset = train_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+        # validation_dataset = validation_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+        # test_dataset = test_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
 
         return {
             "dataset": dataset

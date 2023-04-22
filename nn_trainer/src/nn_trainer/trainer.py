@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
 import matplotlib.pyplot as plt
@@ -24,7 +26,7 @@ class Trainer(ABC):
         pass
 
     @abstractmethod
-    def train(self, train_dataset, validation_dataset, epochs):
+    def train(self, dataset, epochs):
         pass
 
     @abstractmethod
@@ -66,13 +68,13 @@ class KerasEfficientNetTrainer(Trainer):
         x = data_augmentation(inputs)
 
         # Build EfficientNet model with first layers and no last layers
-        x = EfficientNetB0(include_top=False, weights="imagenet", input_tensor=x, classes=3)(x)
+        model = EfficientNetB0(include_top=False, weights="imagenet", input_tensor=x, classes=3)
 
         # Freeze the pretrained weights
-        x.trainable = False
+        model.trainable = False
 
         # (Re)build last layers
-        x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(x)
+        x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.keras.layers.Dropout(0.2, name="top_dropout")(x)
         outputs = tf.keras.layers.Dense(3, activation="softmax", name="pred")(x)
@@ -83,12 +85,12 @@ class KerasEfficientNetTrainer(Trainer):
         # Compile model for training
         model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
-        print(model.summary())
+        # print(model.summary())
 
         self.model = model
 
-    def train(self, train_dataset, validation_dataset, epochs=10) -> None:
-        self.model.fit(train_dataset, validation_data=validation_dataset, epochs=epochs)
+    def train(self, dataset, epochs=30) -> None:
+        self.model.fit(dataset, validation_data=dataset, epochs=epochs)
 
     def evaluate(self, dataset):
         """Evaluates the model

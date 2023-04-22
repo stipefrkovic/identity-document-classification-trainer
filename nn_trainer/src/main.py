@@ -23,9 +23,9 @@ class Main:
         self.trainer = KerasEfficientNetTrainer()
         self.trainer.build()
 
-    # def train_model(self):
-    #     self.trainer.train(self.dataset)
-    #
+    def train_model(self):
+        self.trainer.train(self.dataset)
+
     # def evaluate_model(self):
     #     res = self.trainer.evaluate(self.dataset)
     #     print(res)
@@ -40,5 +40,6 @@ class Main:
     #     self.export_model()
 
 
-# Main().create_dataset()
+Main().create_dataset()
 Main().build_model()
+Main().train_model()
