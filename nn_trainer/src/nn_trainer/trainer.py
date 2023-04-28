@@ -18,7 +18,7 @@ def plot_hist(hist):
 
 
 class Trainer(ABC):
-    def __init__(self) -> None:
+    def __init__(self):
         self.model = None
 
     @abstractmethod
@@ -34,18 +34,10 @@ class Trainer(ABC):
         pass
 
     @abstractmethod
-    def export_model(self, model_output_path: str):
+    def export_model(self, model_output_path):
         pass
 
     def get_model(self):
-        """Returns the model if it has been created.
-
-    Raises:
-        Exception: Model has not been created.
-
-    Returns:
-        The model.
-    """
         if self.model is None:
             raise Exception("Model has not been created.")
         return self.model
@@ -53,7 +45,7 @@ class Trainer(ABC):
 
 class KerasEfficientNetTrainer(Trainer):
 
-    def build_model(self) -> None:
+    def build_model(self):
         # Build first layers
         inputs = tf.keras.layers.Input(shape=(224, 224, 3))
         data_augmentation = tf.keras.Sequential(
@@ -86,7 +78,7 @@ class KerasEfficientNetTrainer(Trainer):
         model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
         self.model = model
 
-    def train_model(self, dataset, epochs=5) -> None:
+    def train_model(self, dataset, epochs=5):
         optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
         self.model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
         hist = self.model.fit(dataset, validation_data=dataset, epochs=epochs)
@@ -105,17 +97,6 @@ class KerasEfficientNetTrainer(Trainer):
         plot_hist(hist)
 
     def evaluate_model(self, dataset):
-        """Evaluates the model
-
-    Args:
-        dataset: Dataset used to evaluate the model.
-
-    Returns:
-        dict: {
-          "loss": float,
-          "accuracy": float
-        }
-    """
         loss, accuracy = self.model.evaluate(dataset)
         print("Loss: %s, Accuracy: %s" % (loss, accuracy))
         return {

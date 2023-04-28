@@ -1,8 +1,6 @@
 from nn_trainer.dataset_creator import KerasEfficientNetDatasetCreator
 from nn_trainer.trainer import KerasEfficientNetTrainer
 
-model_output_path = "src/nn_trainer/model/"
-
 
 class Main:
     def __init__(self):
