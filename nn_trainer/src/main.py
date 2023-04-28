@@ -27,14 +27,6 @@ class Main:
         self.trainer.evaluate_model(self.dataset)
         self.trainer.export_model()
 
-    # def evaluate_model(self):
-    #     res = self.trainer.evaluate(self.dataset)
-    #     print(res)
-    #
-    # def export_model(self):
-    #     self.trainer.export_model(model_output_path)
-    #
-
 
 main = Main()
 main.create_dataset()
