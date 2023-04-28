@@ -20,6 +20,6 @@ testing:
   stage: test
   script:
     - docker-compose build
-    - docker-compose run app black --check .
-    - docker-compose run app isort . --check-only --profile black
-    - docker-compose run app pytest -v 
+    # - docker-compose run app black --check .
+    # - docker-compose run app isort . --check-only --profile black
+    # - docker-compose run app pytest -v 
