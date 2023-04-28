@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 
 import tensorflow as tf
-import os
+from pathlib import Path
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 class DatasetCreator(ABC):
@@ -13,8 +12,8 @@ class DatasetCreator(ABC):
 
 
 class KerasEfficientNetDatasetCreator(DatasetCreator):
-    def __init__(self, path=os.getcwd() + '/nn_trainer/dataset', image_size=(224, 224), batch_size=1) -> None:
-        self.dataset_path = path
+    def __init__(self, dataset_path='/nn_trainer/dataset', image_size=(224, 224), batch_size=1) -> None:
+        self.dataset_path = str(Path().absolute()) + dataset_path
         self.image_size = image_size
         self.image_shape = self.image_size + (3,)
         self.batch_size = batch_size

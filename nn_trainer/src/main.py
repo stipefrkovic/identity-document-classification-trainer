@@ -1,9 +1,8 @@
 from nn_trainer.dataset_creator import KerasEfficientNetDatasetCreator
 from nn_trainer.trainer import KerasEfficientNetTrainer
 
-
-dataset_path = "src/nn_trainer/dataset/"
 model_output_path = "src/nn_trainer/model/"
+
 
 class Main:
     def __init__(self):
@@ -11,7 +10,7 @@ class Main:
         self.trainer = None
 
     def create_dataset(self):
-        dataset_creator = KerasEfficientNetDatasetCreator(dataset_path)
+        dataset_creator = KerasEfficientNetDatasetCreator()
         dataset_dict = dataset_creator.create_dataset()
 
         if dataset_dict.get("dataset", None) is None:
@@ -19,12 +18,14 @@ class Main:
 
         self.dataset = dataset_dict.get("dataset")
 
-    def build_model(self):
-        self.trainer = KerasEfficientNetTrainer()
-        self.trainer.build()
-
     def train_model(self):
-        self.trainer.train(self.dataset)
+        self.trainer = KerasEfficientNetTrainer()
+        self.trainer.build_model()
+        self.trainer.train_model(self.dataset)
+        self.trainer.unfreeze_model()
+        self.trainer.train_unfrozen_model(self.dataset)
+        self.trainer.evaluate_model(self.dataset)
+        self.trainer.export_model()
 
     # def evaluate_model(self):
     #     res = self.trainer.evaluate(self.dataset)
@@ -33,12 +34,8 @@ class Main:
     # def export_model(self):
     #     self.trainer.export_model(model_output_path)
     #
-    def create_model(self):
-        self.create_dataset()
-        self.build_model()
-        self.train_model()
-        # self.evaluate_model()
-        # self.export_model()
 
 
-Main().create_model()
+main = Main()
+main.create_dataset()
+main.train_model()

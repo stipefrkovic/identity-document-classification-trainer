@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 # Can be used with model.fit
@@ -22,15 +22,15 @@ class Trainer(ABC):
         self.model = None
 
     @abstractmethod
-    def build(self):
+    def build_model(self):
         pass
 
     @abstractmethod
-    def train(self, dataset, epochs):
+    def train_model(self, dataset, epochs):
         pass
 
     @abstractmethod
-    def evaluate(self, dataset):
+    def evaluate_model(self, dataset):
         pass
 
     @abstractmethod
@@ -53,15 +53,16 @@ class Trainer(ABC):
 
 class KerasEfficientNetTrainer(Trainer):
 
-    def build(self) -> None:
+    def build_model(self) -> None:
         # Build first layers
         inputs = tf.keras.layers.Input(shape=(224, 224, 3))
         data_augmentation = tf.keras.Sequential(
             [
-                tf.keras.layers.RandomRotation(factor=0.15),
-                tf.keras.layers.RandomTranslation(height_factor=0.1, width_factor=0.1),
+                tf.keras.layers.RandomRotation(factor=0.1),
+                tf.keras.layers.RandomTranslation(height_factor=0.05, width_factor=0.05),
                 tf.keras.layers.RandomFlip(),
                 tf.keras.layers.RandomContrast(factor=0.1),
+                tf.keras.layers.RandomZoom(height_factor=(-0.1, 0), width_factor=(-0.1, 0))
             ],
             name="data_augmentation",
         )
@@ -73,6 +74,8 @@ class KerasEfficientNetTrainer(Trainer):
         # Freeze the pretrained weights
         model.trainable = False
 
+        print(model.summary())
+
         # (Re)build last layers
         x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
         x = tf.keras.layers.BatchNormalization()(x)
@@ -81,18 +84,27 @@ class KerasEfficientNetTrainer(Trainer):
 
         # Build EfficientNet model with new last layers
         model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
-
-        # Compile model for training
-        model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-
-        # print(model.summary())
-
         self.model = model
 
-    def train(self, dataset, epochs=30) -> None:
-        self.model.fit(dataset, validation_data=dataset, epochs=epochs)
+    def train_model(self, dataset, epochs=5) -> None:
+        optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
+        self.model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
+        hist = self.model.fit(dataset, validation_data=dataset, epochs=epochs)
+        plot_hist(hist)
 
-    def evaluate(self, dataset):
+    def unfreeze_model(self):
+        # We unfreeze the top 20 layers while leaving BatchNorm layers frozen
+        for layer in self.model.layers[-20:]:
+            if not isinstance(layer, tf.keras.layers.BatchNormalization):
+                layer.trainable = True
+
+    def train_unfrozen_model(self, dataset, epochs=3):
+        optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+        self.model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
+        hist = self.model.fit(dataset, epochs=epochs, validation_data=dataset)
+        plot_hist(hist)
+
+    def evaluate_model(self, dataset):
         """Evaluates the model
 
     Args:
@@ -105,10 +117,11 @@ class KerasEfficientNetTrainer(Trainer):
         }
     """
         loss, accuracy = self.model.evaluate(dataset)
+        print("Loss: %s, Accuracy: %s" % (loss, accuracy))
         return {
             "loss": loss,
             "accuracy": accuracy
         }
 
-    def export_model(self, model_output_path: str):
-        return self.model.export(export_dir=model_output_path)
+    def export_model(self, model_export_path="/nn_trainer/model/my_model.h5"):
+        self.model.save(str(Path().absolute()) + model_export_path)
