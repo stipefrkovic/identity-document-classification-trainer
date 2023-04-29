@@ -26,15 +26,15 @@ class Trainer(ABC):
         pass
 
     @abstractmethod
-    def train_model(self, dataset, epochs):
+    def train_model(self, train_dataset, validation_dataset, epochs, learning_rate):
         pass
 
     @abstractmethod
-    def evaluate_model(self, dataset):
+    def evaluate_model(self, test_dataset):
         pass
 
     @abstractmethod
-    def export_model(self, model_output_path):
+    def save_model(self):
         pass
 
     def get_model(self):
@@ -44,10 +44,16 @@ class Trainer(ABC):
 
 
 class KerasEfficientNetTrainer(Trainer):
+    def __init__(self):
+        super().__init__()
+        self.image_size = 224
 
     def build_model(self):
+        pass
+
+    def build_frozen_model(self):
         # Build first layers
-        inputs = tf.keras.layers.Input(shape=(224, 224, 3))
+        inputs = tf.keras.layers.Input(shape=(self.image_size, self.image_size, 3))
         data_augmentation = tf.keras.Sequential(
             [
                 tf.keras.layers.RandomRotation(factor=0.1),
@@ -72,17 +78,24 @@ class KerasEfficientNetTrainer(Trainer):
         x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.keras.layers.Dropout(0.2, name="top_dropout")(x)
-        outputs = tf.keras.layers.Dense(3, activation="softmax", name="pred")(x)
+        outputs = tf.keras.layers.Dense(3, activation=tf.keras.activations.softmax, name="pred")(x)
 
         # Build EfficientNet model with new last layers
         model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
         self.model = model
 
-    def train_model(self, dataset, epochs=5):
-        optimizer = tf.keras.optimizers.Adam(learning_rate=1e-2)
-        self.model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
-        hist = self.model.fit(dataset, validation_data=dataset, epochs=epochs)
+    def train_model(self, train_dataset, validation_dataset, epochs, learning_rate):
+        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+        self.model.compile(optimizer=optimizer,
+                           loss=tf.keras.losses.CategoricalCrossentropy(),
+                           metrics=tf.keras.metrics.Accuracy())
+        hist = self.model.fit(train_dataset,
+                              validation_data=validation_dataset,
+                              epochs=epochs)
         plot_hist(hist)
+
+    def train_frozen_model(self, train_dataset, validation_dataset, epochs=5, learning_rate=1e-2):
+        self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
 
     def unfreeze_model(self):
         # We unfreeze the top 20 layers while leaving BatchNorm layers frozen
@@ -90,19 +103,16 @@ class KerasEfficientNetTrainer(Trainer):
             if not isinstance(layer, tf.keras.layers.BatchNormalization):
                 layer.trainable = True
 
-    def train_unfrozen_model(self, dataset, epochs=3):
-        optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
-        self.model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])
-        hist = self.model.fit(dataset, epochs=epochs, validation_data=dataset)
-        plot_hist(hist)
+    def train_unfrozen_model(self, train_dataset, validation_dataset, epochs=3, learning_rate=1e-4):
+        self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
 
-    def evaluate_model(self, dataset):
-        loss, accuracy = self.model.evaluate(dataset)
+    def evaluate_model(self, test_dataset):
+        loss, accuracy = self.model.evaluate(test_dataset)
         print("Loss: %s, Accuracy: %s" % (loss, accuracy))
         return {
             "loss": loss,
             "accuracy": accuracy
         }
 
-    def export_model(self, model_export_path="/nn_trainer/model/my_model.h5"):
-        self.model.save(str(Path().absolute()) + model_export_path)
+    def save_model(self, model_save_path="/nn_trainer/model/my_model.h5"):
+        self.model.save(str(Path().absolute()) + model_save_path)

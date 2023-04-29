@@ -6,30 +6,26 @@ import matplotlib.pyplot as plt
 
 
 class DatasetCreator(ABC):
-    def __init__(self):
-        self.dataset = None
-        self.train_dataset = None
-        self.validation_dataset = None
-        self.test_dataset = None
-
     @abstractmethod
     def create_dataset(self):
         pass
 
+    @abstractmethod
+    def split_dataset(self, dataset, test_train_ratio=0.8, train_validation_ratio=0.8):
+        pass
+
 
 class KerasEfficientNetDatasetCreator(DatasetCreator):
-    def __init__(self, dataset_path='/nn_trainer/dataset', image_size=(224, 224), batch_size=1):
-        super().__init__()
+    def __init__(self, dataset_path='/nn_trainer/dataset', image_size=224, batch_size=1):
         self.dataset_path = str(Path().absolute()) + dataset_path
         self.image_size = image_size
-        self.image_shape = self.image_size + (3,)
         self.batch_size = batch_size
 
     def create_dataset(self):
         dataset = tf.keras.utils.image_dataset_from_directory(self.dataset_path,
                                                               shuffle=True,
                                                               batch_size=self.batch_size,
-                                                              image_size=self.image_size,
+                                                              image_size=(self.image_size, self.image_size),
                                                               label_mode="categorical")
 
         # for image_batch, labels_batch in dataset:
@@ -48,10 +44,11 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
         # augment and show a few images from the dataset
         data_augmentation = tf.keras.Sequential(
             [
-                tf.keras.layers.RandomRotation(factor=0.15),
-                tf.keras.layers.RandomTranslation(height_factor=0.1, width_factor=0.1),
+                tf.keras.layers.RandomRotation(factor=0.1),
+                tf.keras.layers.RandomTranslation(height_factor=0.05, width_factor=0.05),
                 tf.keras.layers.RandomFlip(),
                 tf.keras.layers.RandomContrast(factor=0.1),
+                tf.keras.layers.RandomZoom(height_factor=(-0.1, 0), width_factor=(-0.1, 0))
             ],
             name="data_augmentation",
         )
@@ -62,19 +59,38 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
             plt.axis("off")
         plt.show()
 
-        self.dataset = dataset
+        return {
+            "dataset": dataset
+        }
 
-        return dataset
+    def split_dataset(self, dataset, train_split=0.7, validation_split=0.15, test_split=0.15):
+        if train_split + validation_split + test_split != 1.0:
+            raise Exception("The dataset splits do not add up to 1.")
 
-    def split_dataset(self, test_train_ratio=0.8, train_validation_ratio=0.8):
-        train_dataset, test_dataset = tf.keras.utils.split_dataset(self.dataset,
-                                                                   left_size=test_train_ratio)
-        reduced_train_dataset, validation_dataset = tf.keras.utils.split_dataset(train_dataset,
-                                                                                 left_size=train_validation_ratio)
-        print(int(reduced_train_dataset.cardinality()))
-        print(int(validation_dataset.cardinality()))
-        print(int(test_dataset.cardinality()))
+        dataset_size = dataset.cardinality().numpy()
+        # print(dataset_size)
 
-        self.train_dataset = train_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-        self.validation_dataset = validation_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-        self.test_dataset = test_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+        train_dataset_size = int(train_split * dataset_size)
+        # print(train_dataset_size)
+        validation_dataset_size = int(validation_split * dataset_size)
+        # print(validation_dataset_size)
+        test_dataset_size = int(test_split * dataset_size)
+        # print(test_dataset_size)
+
+        train_dataset = dataset.take(train_dataset_size)
+        validation_dataset = dataset.skip(train_dataset_size).take(validation_dataset_size)
+        test_dataset = dataset.skip(train_dataset_size).skip(validation_dataset_size)
+
+        # print(int(train_dataset.cardinality()))
+        # print(int(validation_dataset.cardinality()))
+        # print(int(test_dataset.cardinality()))
+
+        train_dataset = train_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+        validation_dataset = validation_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+        test_dataset = test_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+
+        return {
+            "train_dataset": train_dataset,
+            "validation_dataset": validation_dataset,
+            "test_dataset": test_dataset
+        }
