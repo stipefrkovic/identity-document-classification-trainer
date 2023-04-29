@@ -51,7 +51,7 @@ class KerasEfficientNetTrainer(Trainer):
     def build_model(self):
         pass
 
-    def build_frozen_model(self):
+    def build_frozen_model(self, num_classes=3):
         # Build first layers
         inputs = tf.keras.layers.Input(shape=(self.image_size, self.image_size, 3))
         data_augmentation = tf.keras.Sequential(
@@ -67,7 +67,7 @@ class KerasEfficientNetTrainer(Trainer):
         x = data_augmentation(inputs)
 
         # Build EfficientNet model with first layers and no last layers
-        model = EfficientNetB0(include_top=False, weights="imagenet", input_tensor=x, classes=3)
+        model = EfficientNetB0(include_top=False, weights="imagenet", input_tensor=x, classes=num_classes)
 
         # Freeze the pretrained weights
         model.trainable = False
@@ -78,7 +78,7 @@ class KerasEfficientNetTrainer(Trainer):
         x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.keras.layers.Dropout(0.2, name="top_dropout")(x)
-        outputs = tf.keras.layers.Dense(3, activation=tf.keras.activations.softmax, name="pred")(x)
+        outputs = tf.keras.layers.Dense(num_classes, activation=tf.keras.activations.softmax, name="pred")(x)
 
         # Build EfficientNet model with new last layers
         model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")

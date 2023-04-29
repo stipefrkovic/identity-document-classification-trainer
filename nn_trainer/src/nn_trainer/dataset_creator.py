@@ -11,21 +11,17 @@ class DatasetCreator(ABC):
         pass
 
     @abstractmethod
-    def split_dataset(self, dataset, test_train_ratio=0.8, train_validation_ratio=0.8):
+    def split_dataset(self, dataset, train_split=0.7, validation_split=0.15, test_split=0.15):
         pass
 
 
 class KerasEfficientNetDatasetCreator(DatasetCreator):
-    def __init__(self, dataset_path='/nn_trainer/dataset', image_size=224, batch_size=1):
-        self.dataset_path = str(Path().absolute()) + dataset_path
-        self.image_size = image_size
-        self.batch_size = batch_size
-
-    def create_dataset(self):
-        dataset = tf.keras.utils.image_dataset_from_directory(self.dataset_path,
+    def create_dataset(self, dataset_path='/nn_trainer/dataset', image_size=224, batch_size=1):
+        full_dataset_path = str(Path().absolute()) + dataset_path
+        dataset = tf.keras.utils.image_dataset_from_directory(full_dataset_path,
                                                               shuffle=True,
-                                                              batch_size=self.batch_size,
-                                                              image_size=(self.image_size, self.image_size),
+                                                              batch_size=batch_size,
+                                                              image_size=(image_size, image_size),
                                                               label_mode="categorical")
 
         # for image_batch, labels_batch in dataset:
