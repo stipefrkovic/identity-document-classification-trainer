@@ -16,7 +16,7 @@ class DatasetCreator(ABC):
 
 
 class KerasEfficientNetDatasetCreator(DatasetCreator):
-    def create_dataset(self, dataset_path='/nn_trainer/dataset', image_size=224, batch_size=1):
+    def create_dataset(self, dataset_path='/src/nn_trainer/dataset', image_size=224, batch_size=32):
         full_dataset_path = str(Path().absolute()) + dataset_path
         dataset = tf.keras.utils.image_dataset_from_directory(full_dataset_path,
                                                               shuffle=True,

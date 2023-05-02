@@ -88,13 +88,13 @@ class KerasEfficientNetTrainer(Trainer):
         optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
         self.model.compile(optimizer=optimizer,
                            loss=tf.keras.losses.CategoricalCrossentropy(),
-                           metrics=tf.keras.metrics.Accuracy())
+                           metrics=["accuracy"])
         hist = self.model.fit(train_dataset,
                               validation_data=validation_dataset,
                               epochs=epochs)
         plot_hist(hist)
 
-    def train_frozen_model(self, train_dataset, validation_dataset, epochs=5, learning_rate=1e-2):
+    def train_frozen_model(self, train_dataset, validation_dataset, epochs=40, learning_rate=1e-2):
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
 
     def unfreeze_model(self):
@@ -103,7 +103,7 @@ class KerasEfficientNetTrainer(Trainer):
             if not isinstance(layer, tf.keras.layers.BatchNormalization):
                 layer.trainable = True
 
-    def train_unfrozen_model(self, train_dataset, validation_dataset, epochs=3, learning_rate=1e-4):
+    def train_unfrozen_model(self, train_dataset, validation_dataset, epochs=20, learning_rate=1e-4):
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
 
     def evaluate_model(self, test_dataset):

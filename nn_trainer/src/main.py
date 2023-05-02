@@ -12,8 +12,7 @@ class Main:
 
     def create_dataset(self):
         dataset_creator = KerasEfficientNetDatasetCreator()
-        dataset = dataset_creator.create_dataset(dataset_path='/nn_trainer/stanford_dogs_dataset',
-                                                 batch_size=32)
+        dataset = dataset_creator.create_dataset(dataset_path='/src/nn_trainer/stanford_dogs_dataset', batch_size=32)
 
         if dataset.get("dataset", None) is None:
             raise Exception("No dataset.")
@@ -39,12 +38,12 @@ class Main:
 
     def train_model(self):
         self.trainer = KerasEfficientNetTrainer()
-        self.trainer.build_frozen_model(num_classes=120)
+        self.trainer.build_frozen_model(num_classes=5)
         self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=50)
         self.trainer.unfreeze_model()
         self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=30)
         self.trainer.evaluate_model(self.test_dataset)
-        self.trainer.save_model()
+        self.trainer.save_model('/src/nn_trainer/model/my_model.h5')
 
 
 main = Main()
