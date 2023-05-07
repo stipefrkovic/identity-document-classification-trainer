@@ -47,4 +47,4 @@ RUN python /app/src/workspace/training_demo/scripts/generate_tfrecord.py -x /app
 COPY ./run_linters.sh /run_linters.sh
 COPY ./.flake8 /.flake8
 
-CMD ["python", "/app/src/workspace/training_demo/model_main_tf2.py", "--model_dir=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32", "--pipeline_config_path=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config"]
+CMD ["python", "/app/src/workspace/training_demo/model_main_tf2.py", "--model_dir=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32", "--pipeline_config_path=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config", "--num_train_steps=10000", "--checkpoint_every_n=100"]

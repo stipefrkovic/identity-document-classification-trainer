@@ -6,4 +6,4 @@ services:
     build: ./training_app
     volumes:
       - ./training_app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32:/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32
-    command: python /app/src/workspace/training_demo/model_main_tf2.py --model_dir=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32 --pipeline_config_path=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config
+    command: python /app/src/workspace/training_demo/model_main_tf2.py --model_dir=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32 --pipeline_config_path=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config --num_train_steps=10000 --checkpoint_every_n=100
