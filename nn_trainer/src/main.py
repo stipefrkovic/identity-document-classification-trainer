@@ -1,10 +1,13 @@
 from nn_trainer.dataset_creator import KerasEfficientNetDatasetCreator
 from nn_trainer.trainer import KerasEfficientNetTrainer
 
+DATASET_PATH = '/src/nn_trainer/dataset'
+MODEL_EXPORT_PATH = '/src/nn_trainer/model/my_model.h5'
 
 class Main:
     def __init__(self):
         self.dataset = None
+        self.num_classes = None
         self.train_dataset = None
         self.validation_dataset = None
         self.test_dataset = None
@@ -12,12 +15,17 @@ class Main:
 
     def create_dataset(self):
         dataset_creator = KerasEfficientNetDatasetCreator()
-        dataset = dataset_creator.create_dataset(dataset_path='/src/nn_trainer/stanford_dogs_dataset', batch_size=32)
+        dataset = dataset_creator.create_dataset(DATASET_PATH, batch_size=4)
 
         if dataset.get("dataset", None) is None:
             raise Exception("No dataset.")
         else:
             self.dataset = dataset.get("dataset")
+
+        if dataset.get("num_classes", None) is None:
+            raise Exception("No num_classes.")
+        else:
+            self.num_classes = dataset.get("num_classes")
 
         datasets = dataset_creator.split_dataset(self.dataset)
 
@@ -37,13 +45,13 @@ class Main:
             self.test_dataset = datasets.get("test_dataset")
 
     def train_model(self):
-        self.trainer = KerasEfficientNetTrainer()
-        self.trainer.build_frozen_model(num_classes=5)
+        self.trainer = KerasEfficientNetTrainer(self.num_classes)
+        self.trainer.build_frozen_model()
         self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=50)
         self.trainer.unfreeze_model()
         self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=30)
         self.trainer.evaluate_model(self.test_dataset)
-        self.trainer.save_model('/src/nn_trainer/model/my_model.h5')
+        self.trainer.save_model(MODEL_EXPORT_PATH)
 
 
 main = Main()

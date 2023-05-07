@@ -5,6 +5,7 @@ from tensorflow.keras.applications import EfficientNetB0
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+from logger import logger
 
 # Can be used with model.fit
 def plot_hist(hist):
@@ -44,14 +45,15 @@ class Trainer(ABC):
 
 
 class KerasEfficientNetTrainer(Trainer):
-    def __init__(self):
+    def __init__(self, num_classes):
         super().__init__()
         self.image_size = 224
+        self.num_classes = num_classes
 
     def build_model(self):
         pass
 
-    def build_frozen_model(self, num_classes=3):
+    def build_frozen_model(self):
         # Build first layers
         inputs = tf.keras.layers.Input(shape=(self.image_size, self.image_size, 3))
         data_augmentation = tf.keras.Sequential(
@@ -67,18 +69,18 @@ class KerasEfficientNetTrainer(Trainer):
         x = data_augmentation(inputs)
 
         # Build EfficientNet model with first layers and no last layers
-        model = EfficientNetB0(include_top=False, weights="imagenet", input_tensor=x, classes=num_classes)
+        model = EfficientNetB0(include_top=False, weights="imagenet", input_tensor=x, classes=self.num_classes)
 
         # Freeze the pretrained weights
         model.trainable = False
 
-        print(model.summary())
+        # print(model.summary())
 
         # (Re)build last layers
         x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.keras.layers.Dropout(0.2, name="top_dropout")(x)
-        outputs = tf.keras.layers.Dense(num_classes, activation=tf.keras.activations.softmax, name="pred")(x)
+        outputs = tf.keras.layers.Dense(self.num_classes, activation=tf.keras.activations.softmax, name="pred")(x)
 
         # Build EfficientNet model with new last layers
         model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
@@ -108,11 +110,11 @@ class KerasEfficientNetTrainer(Trainer):
 
     def evaluate_model(self, test_dataset):
         loss, accuracy = self.model.evaluate(test_dataset)
-        print("Loss: %s, Accuracy: %s" % (loss, accuracy))
+        logger.info("Loss: %s, Accuracy: %s" % (loss, accuracy))
         return {
             "loss": loss,
             "accuracy": accuracy
         }
 
-    def save_model(self, model_save_path="/nn_trainer/model/my_model.h5"):
+    def save_model(self, model_save_path):
         self.model.save(str(Path().absolute()) + model_save_path)
