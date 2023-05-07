@@ -5,6 +5,7 @@ This python project is used to train the efficientdet model.
 ## Putting the annotated images for training
 
 The annotated images should be put in this directory:
+
 ```
 training_app/src/workspace/training_demo/images/train
 ```
@@ -12,6 +13,7 @@ training_app/src/workspace/training_demo/images/train
 ## Putting the annotated images for testing
 
 The annotated images should be put in this directory:
+
 ```
 training_app/src/workspace/training_demo/images/test
 ```
@@ -20,5 +22,5 @@ training_app/src/workspace/training_demo/images/test
 
 To start the training you should use this command:
 ```terminal
-docker-compose up
+docker-compose up --build
 ```

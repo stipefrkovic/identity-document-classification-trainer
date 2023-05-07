@@ -1,11 +1,11 @@
 item {
     id: 1
-    name: 'driving-license'
+    name: 'driving_license'
 }
 
 item {
     id: 2
-    name: 'id'
+    name: 'id_card'
 }
 
 item {
