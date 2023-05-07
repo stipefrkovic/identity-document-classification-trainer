@@ -76,12 +76,16 @@ class KerasEfficientNetTrainer(Trainer):
         x = data_augmentation(inputs)
 
         # Build EfficientNet model with first layers and no last layers
+
         model = EfficientNetB0(
             include_top=False,
-            weights="imagenet",
+            weights=None,
             input_tensor=x,
             classes=self.num_classes,
         )
+
+        weights = "/nn_trainer/weights/efficientnetb0_notop.h5"
+        model.load_weights(weights)
 
         # Freeze the pretrained weights
         model.trainable = False
