@@ -67,8 +67,8 @@ args = parser.parse_args()
 dataset_path = args.dataset_path
 model_export_path = args.model_export_path
 
-logger.info("dataset_path: " + dataset_path)
-logger.info("model_export_path: " + model_export_path)
+logger.debug("dataset_path: " + dataset_path)
+logger.debug("model_export_path: " + model_export_path)
 
 main = Main(dataset_path, model_export_path)
 main.create_dataset()
