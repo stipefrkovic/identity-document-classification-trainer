@@ -1,21 +1,28 @@
 from nn_trainer.dataset_creator import KerasEfficientNetDatasetCreator
 from nn_trainer.trainer import KerasEfficientNetTrainer
+from logger import logger
 
-DATASET_PATH = '/src/nn_trainer/dataset'
-MODEL_EXPORT_PATH = '/src/nn_trainer/model/my_model.h5'
+import argparse
+import os
+
+# DATASET_PATH = '/src/nn_trainer/dataset'
+# MODEL_EXPORT_PATH = '/src/nn_trainer/model/my_model.h5'
 
 class Main:
-    def __init__(self):
+    def __init__(self, dataset_path, model_export_path):
+        self.dataset_path = dataset_path
         self.dataset = None
         self.num_classes = None
         self.train_dataset = None
         self.validation_dataset = None
         self.test_dataset = None
+        
+        self.model_export_path = model_export_path
         self.trainer = None
 
     def create_dataset(self):
         dataset_creator = KerasEfficientNetDatasetCreator()
-        dataset = dataset_creator.create_dataset(DATASET_PATH, batch_size=4)
+        dataset = dataset_creator.create_dataset(self.dataset_path, batch_size=4)
 
         if dataset.get("dataset", None) is None:
             raise Exception("No dataset.")
@@ -51,9 +58,18 @@ class Main:
         self.trainer.unfreeze_model()
         self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=30)
         self.trainer.evaluate_model(self.test_dataset)
-        self.trainer.save_model(MODEL_EXPORT_PATH)
+        self.trainer.save_model(self.model_export_path)
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-dp', '--dataset_path', help='Pascal VOC Dataset Directory', required=True)
+parser.add_argument('-mep', '--model_export_path', help='Image Dataset Output Directory', required=True)
+args = parser.parse_args()
+dataset_path = args.dataset_path
+model_export_path = args.model_export_path
 
-main = Main()
+logger.info(dataset_path, model_export_path)
+
+main = Main(dataset_path, model_export_path)
 main.create_dataset()
 main.train_model()
+
