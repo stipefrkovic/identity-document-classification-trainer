@@ -61,13 +61,14 @@ class Main:
         self.trainer.save_model(self.model_export_path)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-dp', '--dataset_path', help='Pascal VOC Dataset Directory', required=True)
-parser.add_argument('-mep', '--model_export_path', help='Image Dataset Output Directory', required=True)
+parser.add_argument('-dp', '--dataset_path', help='Image Dataset Directory', required=True)
+parser.add_argument('-mep', '--model_export_path', help='Model Export Directory', required=True)
 args = parser.parse_args()
 dataset_path = args.dataset_path
 model_export_path = args.model_export_path
 
-logger.info(dataset_path, model_export_path)
+logger.info("dataset_path: " + dataset_path)
+logger.info("model_export_path: " + model_export_path)
 
 main = Main(dataset_path, model_export_path)
 main.create_dataset()
