@@ -19,6 +19,8 @@ class DatasetCreator(ABC):
 class KerasEfficientNetDatasetCreator(DatasetCreator):
     def create_dataset(self, dataset_path, image_size=224, batch_size=16):
         full_dataset_path = str(Path().absolute()) + dataset_path
+        logger.debug("Dataset path: " + full_dataset_path)
+
         dataset = tf.keras.utils.image_dataset_from_directory(full_dataset_path,
                                                               shuffle=True,
                                                               batch_size=batch_size,
@@ -53,7 +55,7 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
         # plt.show()
 
         num_classes=len(dataset.class_names)
-        logger.info("num_classes: " + str(num_classes))
+        logger.debug("num_classes: " + str(num_classes))
 
         return {
             "dataset": dataset,
@@ -65,22 +67,22 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
             raise Exception("The dataset splits do not add up to 1.")
 
         dataset_size = dataset.cardinality().numpy()
-        logger.info("dataset_size: " + str(dataset_size))
+        logger.debug("Dataset size: " + str(dataset_size))
 
         train_dataset_size = int(train_split * dataset_size)
-        logger.info("train_dataset_size: " + str(train_dataset_size))
+        logger.debug("Train Dataset Size: " + str(train_dataset_size))
         validation_dataset_size = int(validation_split * dataset_size)
-        logger.info("validation_dataset_size: " + str(validation_dataset_size))
+        logger.debug("Validation Dataset Size: " + str(validation_dataset_size))
         test_dataset_size = int(test_split * dataset_size)
-        logger.info("test_dataset_size: " + str(test_dataset_size))
+        logger.debug("Test Dataset Size: " + str(test_dataset_size))
 
         train_dataset = dataset.take(train_dataset_size)
         validation_dataset = dataset.skip(train_dataset_size).take(validation_dataset_size)
         test_dataset = dataset.skip(train_dataset_size).skip(validation_dataset_size)
 
-        logger.info("train_dataset.cardinality(): " + str(train_dataset.cardinality()))
-        logger.info("validation_dataset.cardinality(): " + str(validation_dataset.cardinality()))
-        logger.info("test_dataset.cardinality(): " + str(test_dataset.cardinality()))
+        logger.debug("train_dataset.cardinality(): " + str(train_dataset.cardinality()))
+        logger.debug("validation_dataset.cardinality(): " + str(validation_dataset.cardinality()))
+        logger.debug("test_dataset.cardinality(): " + str(test_dataset.cardinality()))
 
         train_dataset = train_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
         validation_dataset = validation_dataset.prefetch(buffer_size=tf.data.AUTOTUNE)

@@ -19,6 +19,7 @@ services:
     volumes:
       - ./pascalVOCInput:/app/pascalVOCInput
       - imageDataset:/app/imageDataset
+    env_file: .env
     
 volumes:
   imageDataset:
