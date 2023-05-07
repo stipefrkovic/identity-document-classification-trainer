@@ -74,8 +74,6 @@ class KerasEfficientNetTrainer(Trainer):
         # Freeze the pretrained weights
         model.trainable = False
 
-        # print(model.summary())
-
         # (Re)build last layers
         x = tf.keras.layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
         x = tf.keras.layers.BatchNormalization()(x)

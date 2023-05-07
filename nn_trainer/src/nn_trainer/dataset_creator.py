@@ -25,18 +25,14 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
                                                               image_size=(image_size, image_size),
                                                               label_mode="categorical")
 
-        # for image_batch, labels_batch in dataset:
-        #     print(image_batch.shape)
-        #     print(labels_batch.shape)
-
         # show a few images from the dataset
-        class_names = dataset.class_names
-        for i, (image, label) in enumerate(dataset.take(9)):
-            ax = plt.subplot(3, 3, i + 1)
-            plt.imshow(image[0].numpy().astype("uint8"))
-            # plt.title("{}".format(class_names(label)))
-            plt.axis("off")
-        plt.show()
+        # class_names = dataset.class_names
+        # for i, (image, label) in enumerate(dataset.take(9)):
+        #     ax = plt.subplot(3, 3, i + 1)
+        #     plt.imshow(image[0].numpy().astype("uint8"))
+        #     # plt.title("{}".format(class_names(label)))
+        #     plt.axis("off")
+        # plt.show()
 
         # augment and show a few images from the dataset
         # data_augmentation = tf.keras.Sequential(
