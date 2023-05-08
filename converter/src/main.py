@@ -58,7 +58,7 @@ def convert(input_dir, output_dir):
     img_dir = os.path.join(input_dir, "images")
     logger.debug(f"Image directory: {img_dir}")
     ann_dir = os.path.join(input_dir, "Annotations")
-    logger.debug(f"Annotations directory: {img_dir}")
+    logger.debug(f"Annotations directory: {ann_dir}")
 
     validate_inputs(input_dir)
 
