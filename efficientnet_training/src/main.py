@@ -1,12 +1,11 @@
-from nn_trainer.dataset_creator import KerasEfficientNetDatasetCreator
-from nn_trainer.trainer import KerasEfficientNetTrainer
+from efficientnet.dataset_creator import KerasEfficientNetDatasetCreator
+from efficientnet.training import KerasEfficientNetTrainer
 from logger import logger
-
 import argparse
 import os
 
-# DATASET_PATH = '/src/nn_trainer/dataset'
-# MODEL_EXPORT_PATH = '/src/nn_trainer/model/my_model.h5'
+# DATASET_PATH = '/src/efficientnet/dataset'
+# MODEL_EXPORT_PATH = '/src/efficientnet/model/my_model.h5'
 
 class Main:
     def __init__(self, dataset_path, model_export_path):

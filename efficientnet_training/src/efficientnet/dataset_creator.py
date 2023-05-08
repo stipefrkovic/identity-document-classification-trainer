@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
-
 import tensorflow as tf
 from pathlib import Path
 import matplotlib.pyplot as plt
-
 from logger import logger
 
 class DatasetCreator(ABC):

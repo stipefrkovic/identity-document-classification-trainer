@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
-
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
 import matplotlib.pyplot as plt
 from pathlib import Path
 import os
 from logger import logger
-
 
 # Can be used with model.fit
 def plot_hist(hist):
@@ -86,7 +84,7 @@ class KerasEfficientNetTrainer(Trainer):
 
         logger.debug("Loading weights.")
         try:
-            weights = "./src/nn_trainer/weights/efficientnetb0_notop.h5"
+            weights = "./src/efficientnet/weights/efficientnetb0_notop.h5"
             model.load_weights(weights)
         except FileNotFoundError as e:
             logger.error(f"Could not find weights file: {weights}")

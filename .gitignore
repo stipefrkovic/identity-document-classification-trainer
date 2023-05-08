@@ -136,3 +136,5 @@ nn_trainer/src/nn_trainer/other
 
 pascalVOCInput*
 modelOutput*
+model_export*
+pascal_voc_dataset*
