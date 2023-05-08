@@ -11,7 +11,18 @@ services:
     depends_on:
       converter:
         condition: service_completed_successfully
-        
+
+  efficientdet_training:
+    container_name: efficientdet_training
+    build: ./efficientdet_training
+    command: /bin/bash /app/src/run.sh
+    volumes:
+      - ./efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32:/app/src/models/my_efficientdet_d0_coco17_tpu-32
+    env_file: .env
+    depends_on:
+      efficientnet_training:
+        condition: service_completed_successfully
+
   converter:
     build: ./converter
     command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
