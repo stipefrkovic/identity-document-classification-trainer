@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   app:
-    container_name: efficientdet
-    build: ./efficientdet
+    container_name: efficientdet_training
+    build: ./efficientdet_training
     volumes:
-      - ./efficientdet/src/models/my_efficientdet_d0_coco17_tpu-32:/app/src/models/my_efficientdet_d0_coco17_tpu-32
+      - ./efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32:/app/src/models/my_efficientdet_d0_coco17_tpu-32
     command: /bin/bash /app/src/run.sh

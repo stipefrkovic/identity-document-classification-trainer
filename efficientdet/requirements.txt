@@ -1,4 +1,0 @@
-tensorflow==2.5.0
-cython==0.29.34
-protobuf==3.19.6
-pycocotools==2.0.6
