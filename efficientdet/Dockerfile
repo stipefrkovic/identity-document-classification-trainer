@@ -37,4 +37,4 @@ RUN cd tensorflow/models/research && \
 
 COPY . /app/
 
-CMD ["/bin/bash", "/app/run.sh"]
+CMD ["/bin/bash", "/app/src/run.sh"]
