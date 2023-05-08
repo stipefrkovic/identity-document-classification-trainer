@@ -1,10 +1,24 @@
 version: '3.7'
 
 services:
-  app:
-    container_name: nn-trainer
-    build: ./nn_trainer
-    command: python ./src/main.py
+  efficientnet_training:
+    build: ./efficientnet_training
+    command: python ./src/main.py -dp /keras_image_dataset -mep /model_export
     volumes:
-      - ./nn_trainer/:/app
+      - keras_image_dataset:/app/keras_image_dataset
+      - ./model_export:/app/model_export
     env_file: .env
+    depends_on:
+      converter:
+        condition: service_completed_successfully
+        
+  converter:
+    build: ./converter
+    command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
+    volumes:
+      - ./pascal_voc_dataset:/app/pascal_voc_dataset
+      - keras_image_dataset:/app/keras_image_dataset
+    env_file: .env
+    
+volumes:
+  keras_image_dataset:
