@@ -19,7 +19,6 @@ RUN apt-get update && \
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
-
 RUN pip install git+https://github.com/philferriere/cocoapi.git#subdirectory=PythonAPI
 
 COPY ./protoc-22.3-linux-x86_64.zip /app/protoc-22.3-linux-x86_64.zip
@@ -27,7 +26,6 @@ COPY ./protoc-22.3-linux-x86_64.zip /app/protoc-22.3-linux-x86_64.zip
 RUN unzip /app/protoc-22.3-linux-x86_64.zip -d /usr/local/ && \
     rm /app/protoc-22.3-linux-x86_64.zip && \
     export PATH="$PATH:/usr/local/bin" 
-
 
 RUN cd tensorflow/models/research && \
     protoc object_detection/protos/*.proto --python_out=. && \
@@ -39,12 +37,4 @@ RUN cd tensorflow/models/research && \
 
 COPY . /app/
     
-# RUN cd /app/src/scripts
-
-RUN python /app/src/scripts/generate_tfrecord.py -x /app/src/images/train -l /app/src/annotations/label_map.pbtxt -o /app/src/annotations/train.record
-RUN python /app/src/scripts/generate_tfrecord.py -x /app/src/images/test -l /app/src/annotations/label_map.pbtxt -o /app/src/annotations/test.record
-
-COPY ./run_linters.sh /run_linters.sh
-COPY ./.flake8 /.flake8
-
-CMD ["python", "/app/src/model_main_tf2.py", "--model_dir=/app/src/models/my_efficientdet_d0_coco17_tpu-32", "--pipeline_config_path=/app/src/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config", "--num_train_steps=10000", "--checkpoint_every_n=100"]
+CMD ["/bin/bash", "/app/src/run.sh"]
