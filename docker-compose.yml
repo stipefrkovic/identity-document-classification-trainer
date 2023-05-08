@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   app:
-    container_name: training-app
-    build: ./training_app
+    container_name: efficientdet
+    build: ./efficientdet
     volumes:
-      - ./training_app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32:/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32
-    command: python /app/src/workspace/training_demo/model_main_tf2.py --model_dir=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32 --pipeline_config_path=/app/src/workspace/training_demo/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config --num_train_steps=10000 --checkpoint_every_n=100
+      - ./efficientdet/src/models/my_efficientdet_d0_coco17_tpu-32:/app/src/models/my_efficientdet_d0_coco17_tpu-32
+    command: python /app/src/model_main_tf2.py --model_dir=/app/src/models/my_efficientdet_d0_coco17_tpu-32 --pipeline_config_path=/app/src/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config --num_train_steps=10000 --checkpoint_every_n=100
