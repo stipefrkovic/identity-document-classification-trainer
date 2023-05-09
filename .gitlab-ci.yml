@@ -8,18 +8,7 @@ stages:
   - build
   - test
 
-before_script:
-  - cp .env.example .env
-
-# build:
-#   stage: build
-#   script:
-#     - docker-compose build
-
-testing:
-  stage: test
+build:
+  stage: build
   script:
     - docker-compose build
-    # - docker-compose run app black --check .
-    # - docker-compose run app isort . --check-only --profile black
-    # - docker-compose run app pytest -v 
