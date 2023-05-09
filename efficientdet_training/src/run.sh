@@ -1,3 +1,4 @@
+python /app/src/scripts/partition_images.py --imageDir=/app/pascal_voc_dataset --outputDir=/app/src/images --trainSplit=0.7 --validationSplit=0.15 --testSplit=0.15 --xml
 python /app/src/scripts/generate_tfrecord.py -x /app/src/images/train -l /app/src/annotations/label_map.pbtxt -o /app/src/annotations/train.record
 python /app/src/scripts/generate_tfrecord.py -x /app/src/images/test -l /app/src/annotations/label_map.pbtxt -o /app/src/annotations/test.record
 python /app/src/model_main_tf2.py --model_dir=/app/src/models/my_efficientdet_d0_coco17_tpu-32 --pipeline_config_path=/app/src/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config --num_train_steps=100 --checkpoint_every_n=100
