@@ -15,7 +15,7 @@ docker-compose up
 
 This will execute 3 separate containers in sequence. We recommend not running the docker compose in detached mode (don't run `docker-compose -d`) so that the log outputs can be seen. The execution will take up to 10 minutes.
 
-Please keep an eye on the logs for errors.
+Please keep an eye on the logs for errors. There will however be a lot of warnings in the logs, so do not be alarmed.
 
 If the execution was successful, there should be a new directory created called `model_export` with the following directory structure inside:
 
