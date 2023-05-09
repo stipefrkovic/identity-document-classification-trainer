@@ -53,9 +53,9 @@ class Main:
     def train_model(self):
         self.trainer = KerasEfficientNetTrainer(self.num_classes)
         self.trainer.build_frozen_model()
-        self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=50)
+        self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=5)
         self.trainer.unfreeze_model()
-        self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=30)
+        self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=3)
         self.trainer.evaluate_model(self.test_dataset)
         self.trainer.save_model(self.model_export_path)
 

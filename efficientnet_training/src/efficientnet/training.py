@@ -117,7 +117,7 @@ class KerasEfficientNetTrainer(Trainer):
         plot_hist(hist)
 
     def train_frozen_model(
-        self, train_dataset, validation_dataset, epochs=40, learning_rate=1e-2
+        self, train_dataset, validation_dataset, epochs=50, learning_rate=1e-2
     ):
         logger.info("Training frozen model.")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
