@@ -4,11 +4,11 @@
 # services:
 #   - docker:dind
 
-# stages:
-#   - build
-#   - test
+stages:
+  - build
 
-# build:
-#   stage: build
-#   script:
-#     - docker-compose build
+build:
+  stage: build
+  script:
+    - echo "Deactivated"
+    # - docker-compose build
