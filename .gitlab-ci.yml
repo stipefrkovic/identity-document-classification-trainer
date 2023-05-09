@@ -1,14 +1,14 @@
 
-image: docker:latest
+# image: docker:latest
 
-services:
-  - docker:dind
+# services:
+#   - docker:dind
 
-stages:
-  - build
-  - test
+# stages:
+#   - build
+#   - test
 
-build:
-  stage: build
-  script:
-    - docker-compose build
+# build:
+#   stage: build
+#   script:
+#     - docker-compose build
