@@ -137,7 +137,7 @@ nn_trainer/src/nn_trainer/other
 pascalVOCInput*
 modelOutput*
 model_export*
-pascal_voc_dataset*
+# pascal_voc_dataset*
 
 efficientdet_training/src/exported-models
 efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32/train/*
