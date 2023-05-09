@@ -8,8 +8,15 @@ This project is executed using docker-compose.
 
 Run the hello world app with docker-compose.
 
+First build the application. This will take a few minutes as it has to fetch a lot of dependencies.
+
 ```bash
 docker-compose build
+```
+
+Then run the application.
+
+```bash
 docker-compose up 
 ```
 
