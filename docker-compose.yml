@@ -1,12 +1,22 @@
 version: '3.7'
 
 services:
+  converter:
+    container_name: converter
+    build: ./converter
+    command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
+    volumes:
+      - ./pascal_voc_dataset:/app/pascal_voc_dataset
+      - keras_image_dataset:/app/keras_image_dataset
+    env_file: .env
+
   efficientnet_training:
+    container_name: efficientnet_training
     build: ./efficientnet_training
     command: python ./src/main.py -dp /keras_image_dataset -mep /model_export
     volumes:
       - keras_image_dataset:/app/keras_image_dataset
-      - ./model_export:/app/model_export
+      - ./model_export/effnet:/app/model_export
     env_file: .env
     depends_on:
       converter:
@@ -18,20 +28,14 @@ services:
     command: /bin/bash /app/src/run.sh
     volumes:
       - ./efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32:/app/src/models/my_efficientdet_d0_coco17_tpu-32
-      - ./efficientdet_training/src/exported-models:/app/src/exported-models
+      - ./model_export/effdet:/app/src/model_export
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
     env_file: .env
     depends_on:
       efficientnet_training:
         condition: service_completed_successfully
 
-  converter:
-    build: ./converter
-    command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
-    volumes:
-      - ./pascal_voc_dataset:/app/pascal_voc_dataset
-      - keras_image_dataset:/app/keras_image_dataset
-    env_file: .env
+
     
 volumes:
   keras_image_dataset:
