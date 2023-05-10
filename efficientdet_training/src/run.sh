@@ -3,4 +3,3 @@ python /app/src/scripts/generate_tfrecord.py --xml_dir /app/src/images/train --l
 python /app/src/scripts/generate_tfrecord.py --xml_dir /app/src/images/test --labels_path /app/src/annotations/label_map.pbtxt --output_path /app/src/annotations/test.record
 python /app/src/model_main_tf2.py --model_dir /app/src/models/my_efficientdet_d0_coco17_tpu-32 --pipeline_config_path /app/src/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config --num_train_steps 200 --checkpoint_every_n 100
 python /app/src/exporter_main_v2.py --input_type image_tensor --pipeline_config_path /app/src/models/my_efficientdet_d0_coco17_tpu-32/pipeline.config --trained_checkpoint_dir /app/src/models/my_efficientdet_d0_coco17_tpu-32/ --output_directory /app/src/model_export
-# TODO move last two scripts to /scripts
