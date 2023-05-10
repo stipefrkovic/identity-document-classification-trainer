@@ -2,7 +2,7 @@
 
 This python project is used to train the machine learning model that will be used to categorise documents.
 
-This project is executed using docker-compose.
+As this project is executed using docker-compose the host system needs to have Docker installed.
 
 ## Contents
 
@@ -61,7 +61,7 @@ This requires the training data to be provided in an image dataset format. This 
         ... 
 ```
 
-Since this application receives a Pascal VOC format, we first need to convert the dataset. THis is done using a small script which gets the annotation classes from the xml file for each class.
+Since this application receives a Pascal VOC format, we first need to convert the dataset. This is done using a small script which gets the annotation classes from the xml file for each class.
 
 Once the dataset conversion is complete, the model is trained. From out testing, with 50 documents it take about 10 minutes. This will increase with the number of documents.
 
@@ -79,20 +79,20 @@ Copy the `.env` file from `.env.example`.
 cp .env.example .env
 ```
 
-Create a directory called `pascalVOCInput` and put the dataset into it.
+Create a directory called `pascal_voc_dataset`.
 
 ```bash
-mkdir pascalVOCInput
+mkdir pascal_voc_dataset
 ```
 
-Now copy the dataset from label studio into it.
+Now copy the zip file, exported from LabelStudio, into it.
 
 ## Running the application
 
 Build and run the docker compose.
 
 ```bash
-docker-compose build
+docker-compose build --no-cache
 docker-compose up 
 ```
 
@@ -101,3 +101,23 @@ This will execute the applications in the following order:
 1. Converter
 2. Efficient Net Trainer
 3. Efficient Det Trainer
+
+We recommend not running the docker compose in detached mode (don't run `docker-compose -d`) so that the log outputs can be seen.
+
+Please keep an eye on the logs for errors. There will however be a lot of warnings in the logs, so do not be alarmed.
+
+If the execution was successful, there should be a new directory created called `model_export` with the following directory structure inside:
+
+```text
+├───effdet
+│   └───saved_model
+│       ├───checkpoint
+│       └───saved_model
+│           ├───assets
+│           └───variables
+└───effnet
+    ├───assets
+    └───variables
+```
+
+If that is the case, then it worked.
