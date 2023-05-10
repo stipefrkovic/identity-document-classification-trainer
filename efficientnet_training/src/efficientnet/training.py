@@ -32,18 +32,19 @@ class Trainer(ABC):
 
 
 class KerasEfficientNetTrainer(Trainer):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, image_size=224):
         super().__init__()
-        self.image_size = 224
         self.num_classes = num_classes
-        logger.debug("Num of classes: " + str(num_classes))
+        self.image_size = image_size
+        logger.info(f"Num of classes: {num_classes}")
+        logger.debug(f"Image size: {image_size}")
 
     def build_model(self):
-        logger.info("Building model")
+        logger.debug("Building model")
 
     def build_frozen_model(self):
         # Build first layers
-        logger.info("Building frozen model")
+        logger.debug("Building frozen model")
         inputs = tf.keras.layers.Input(shape=(self.image_size, self.image_size, 3))
         data_augmentation = tf.keras.Sequential(
             [
@@ -99,7 +100,7 @@ class KerasEfficientNetTrainer(Trainer):
             loss=tf.keras.losses.CategoricalCrossentropy(),
             metrics=["accuracy"],
         )
-        logger.debug(f"Training model for {epochs} epochs")
+        logger.info(f"Training model for {epochs} epochs")
         history_callback = self.model.fit(
             train_dataset, validation_data=validation_dataset, epochs=epochs
         )
@@ -111,11 +112,11 @@ class KerasEfficientNetTrainer(Trainer):
     def train_frozen_model(
         self, train_dataset, validation_dataset, epochs=40, learning_rate=1e-2
     ):
-        logger.info("Training frozen model")
+        logger.debug("Training frozen model")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
 
     def unfreeze_model(self):
-        logger.info("Unfreezing model")
+        logger.debug("Unfreezing model")
 
         # Unfreeze the top 20 layers while leaving BatchNorm layers frozen
         for layer in self.model.layers[-20:]:
@@ -125,15 +126,15 @@ class KerasEfficientNetTrainer(Trainer):
     def train_unfrozen_model(
         self, train_dataset, validation_dataset, epochs=20, learning_rate=1e-4
     ):
-        logger.info("Training unfrozen model")
+        logger.debug("Training unfrozen model")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
 
     def evaluate_model(self, test_dataset):
-        logger.info("Evaluating model")
+        logger.debug("Evaluating model")
         loss, accuracy = self.model.evaluate(test_dataset)
-        logger.info("Test loss: " + str(loss))
-        logger.info("Test accuracy: " + str(accuracy))
+        logger.info(f"Test loss: {loss}")
+        logger.info(f"Test accuracy: {accuracy}")
 
     def save_model(self, model_save_path):
-        logger.info(f"Saving model to {str(Path().absolute()) + model_save_path}")
+        logger.debug(f"Saving model to {str(Path().absolute()) + model_save_path}")
         self.model.save(str(Path().absolute()) + model_save_path)
