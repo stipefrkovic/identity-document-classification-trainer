@@ -1,8 +1,8 @@
 
-# image: docker:latest
+image: docker:latest
 
-# services:
-#   - docker:dind
+services:
+  - docker:dind
 
 stages:
   - build
@@ -15,6 +15,7 @@ build:
     # - docker-compose build
   
 sonarqube-check:
+  stage: sonarqube-check
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
