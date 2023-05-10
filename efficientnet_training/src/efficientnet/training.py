@@ -27,7 +27,7 @@ class Trainer(ABC):
 
     def get_model(self):
         if self.model is None:
-            raise Exception("Model has not been created.")
+            raise TypeError("Model has not been created.")
         return self.model
 
 
@@ -77,6 +77,7 @@ class KerasEfficientNetTrainer(Trainer):
             model.load_weights(weights)
         except FileNotFoundError as e:
             logger.error(f"Could not find weights: {weights}")
+            logger.error(e)
             
         # Freeze the pretrained weights
         model.trainable = False

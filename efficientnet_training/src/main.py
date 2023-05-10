@@ -4,9 +4,6 @@ from logger import logger
 import argparse
 import os
 
-# DATASET_PATH = '/src/efficientnet/dataset'
-# MODEL_EXPORT_PATH = '/src/efficientnet/model/my_model.h5'
-
 class Main:
     def __init__(self, dataset_path, model_export_path):
         self.dataset_path = dataset_path
@@ -24,29 +21,29 @@ class Main:
         dataset = dataset_creator.create_dataset(self.dataset_path, batch_size=4)
 
         if dataset.get("dataset", None) is None:
-            raise Exception("No dataset.")
+            raise KeyError("No dataset.")
         else:
             self.dataset = dataset.get("dataset")
 
         if dataset.get("num_classes", None) is None:
-            raise Exception("No num_classes.")
+            raise KeyError("No num_classes.")
         else:
             self.num_classes = dataset.get("num_classes")
 
         datasets = dataset_creator.split_dataset(self.dataset)
 
         if datasets.get("train_dataset", None) is None:
-            raise Exception("No train_dataset.")
+            raise KeyError("No train_dataset.")
         else:
             self.train_dataset = datasets.get("train_dataset")
 
         if datasets.get("validation_dataset", None) is None:
-            raise Exception("No validation_dataset.")
+            raise KeyError("No validation_dataset.")
         else:
             self.validation_dataset = datasets.get("validation_dataset")
 
         if datasets.get("test_dataset", None) is None:
-            raise Exception("No test_dataset.")
+            raise KeyError("No test_dataset.")
         else:
             self.test_dataset = datasets.get("test_dataset")
 
