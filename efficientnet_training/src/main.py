@@ -2,7 +2,6 @@ from efficientnet.dataset_creator import KerasEfficientNetDatasetCreator
 from efficientnet.training import KerasEfficientNetTrainer
 from logger import logger
 import argparse
-import os
 
 class Main:
     def __init__(self, dataset_path, model_export_path):
@@ -18,7 +17,7 @@ class Main:
 
     def create_dataset(self):
         dataset_creator = KerasEfficientNetDatasetCreator()
-        dataset = dataset_creator.create_dataset(self.dataset_path, batch_size=4)
+        dataset = dataset_creator.create_dataset(self.dataset_path)
 
         if dataset.get("dataset", None) is None:
             raise KeyError("No dataset.")
@@ -48,11 +47,12 @@ class Main:
             self.test_dataset = datasets.get("test_dataset")
 
     def train_model(self):
+        # TODO update the epochs before Friday
         self.trainer = KerasEfficientNetTrainer(self.num_classes)
         self.trainer.build_frozen_model()
-        self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=5)
+        self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=10)
         self.trainer.unfreeze_model()
-        self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=3)
+        self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=5)
         self.trainer.evaluate_model(self.test_dataset)
         self.trainer.save_model(self.model_export_path)
 

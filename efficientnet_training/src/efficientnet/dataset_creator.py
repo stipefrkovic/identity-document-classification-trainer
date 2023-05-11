@@ -47,6 +47,8 @@ class KerasEfficientNetDatasetCreator(DatasetCreator):
         train_dataset_size = int(train_split * dataset_size)
         validation_dataset_size = int(validation_split * dataset_size)
         test_dataset_size = int(test_split * dataset_size)
+        if train_dataset_size == 0 or validation_dataset_size == 0 or test_split == 0:
+            raise ValueError("Desired size of one of the datasets is 0: please modify the dataset split ratios or increase the size of the dataset")
         logger.debug(f"Desired size of train dataset: {train_dataset_size}")
         logger.debug(f"Desired size of validation dataset: {validation_dataset_size}")
         logger.debug(f"Desired size of test dataset: {test_dataset_size}")
