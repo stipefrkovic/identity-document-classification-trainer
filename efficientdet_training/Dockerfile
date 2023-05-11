@@ -34,6 +34,7 @@ RUN cd tensorflow/models/research && \
     cd ../../.. && \
     rm -rf tensorflow && \
     pip install pandas
+RUN pip install pycocotools==2.0.6
 
 COPY . /app/
 

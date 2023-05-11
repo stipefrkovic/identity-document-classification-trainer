@@ -96,6 +96,11 @@ If side inputs are desired, the following arguments could be appended
    --side_input_names context_features,valid_context_size \
    --side_input_types tf.float32,tf.int32
 """
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module='tensorflow_addons') # ignore warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='keras') # ignore warnings
+
 from absl import app
 from absl import flags
 
@@ -103,6 +108,13 @@ import tensorflow.compat.v2 as tf
 from google.protobuf import text_format
 from object_detection import exporter_lib_v2
 from object_detection.protos import pipeline_pb2
+import logging
+from logger import logger
+
+logging.getLogger('tensorflow').setLevel(logging.ERROR) # suppress warnings
+logging.getLogger('object_detection').setLevel(logging.ERROR) # suppress warnings
+
+logger.propagate = False
 
 tf.enable_v2_behavior()
 
@@ -150,6 +162,7 @@ flags.mark_flag_as_required('output_directory')
 
 
 def main(_):
+  logger.info("Starting exporting the model...")
   pipeline_config = pipeline_pb2.TrainEvalPipelineConfig()
   with tf.io.gfile.GFile(FLAGS.pipeline_config_path, 'r') as f:
     text_format.Merge(f.read(), pipeline_config)
@@ -158,7 +171,7 @@ def main(_):
       FLAGS.input_type, pipeline_config, FLAGS.trained_checkpoint_dir,
       FLAGS.output_directory, FLAGS.use_side_inputs, FLAGS.side_input_shapes,
       FLAGS.side_input_types, FLAGS.side_input_names)
-
+  logger.info("Exporting the model finished.")
 
 if __name__ == '__main__':
   app.run(main)

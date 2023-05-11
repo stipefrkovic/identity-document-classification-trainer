@@ -26,9 +26,21 @@ python model_main_tf2.py -- \
   --pipeline_config_path=$PIPELINE_CONFIG_PATH \
   --alsologtostderr
 """
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module='tensorflow_addons') # ignore warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='keras') # ignore warnings
+
 from absl import flags
 import tensorflow.compat.v2 as tf
 from object_detection import model_lib_v2
+import logging
+from logger import logger
+
+logging.getLogger('tensorflow').setLevel(logging.ERROR) # suppress warnings
+logging.getLogger('object_detection').setLevel(logging.ERROR) # suppress warnings
+
+logger.propagate = False
 
 flags.DEFINE_string('pipeline_config_path', None, 'Path to pipeline config '
                     'file.')
@@ -78,6 +90,7 @@ def main(unused_argv):
   tf.config.set_soft_device_placement(True)
 
   if FLAGS.checkpoint_dir:
+    logger.info('Starting evaluation...')
     model_lib_v2.eval_continuously(
         pipeline_config_path=FLAGS.pipeline_config_path,
         model_dir=FLAGS.model_dir,
@@ -86,8 +99,10 @@ def main(unused_argv):
         sample_1_of_n_eval_on_train_examples=(
             FLAGS.sample_1_of_n_eval_on_train_examples),
         checkpoint_dir=FLAGS.checkpoint_dir,
-        wait_interval=300, timeout=FLAGS.eval_timeout)
+        wait_interval=120, timeout=FLAGS.eval_timeout)
+    logger.info('Evaluation finished.')
   else:
+    logger.info('Starting training the model...')
     if FLAGS.use_tpu:
       # TPU is automatically inferred if tpu_name is None and
       # we are running under cloud ai-platform.
@@ -108,7 +123,9 @@ def main(unused_argv):
           train_steps=FLAGS.num_train_steps,
           use_tpu=FLAGS.use_tpu,
           checkpoint_every_n=FLAGS.checkpoint_every_n,
-          record_summaries=FLAGS.record_summaries)
+          record_summaries=FLAGS.record_summaries,
+          checkpoint_max_to_keep=10)
+    logger.info('Training the model finished.')
 
 if __name__ == '__main__':
   tf.compat.v1.app.run()
