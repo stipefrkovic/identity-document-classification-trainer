@@ -123,7 +123,8 @@ def main(unused_argv):
           train_steps=FLAGS.num_train_steps,
           use_tpu=FLAGS.use_tpu,
           checkpoint_every_n=FLAGS.checkpoint_every_n,
-          record_summaries=FLAGS.record_summaries)
+          record_summaries=FLAGS.record_summaries,
+          checkpoint_max_to_keep=10)
     logger.info('Training the model finished.')
 
 if __name__ == '__main__':
