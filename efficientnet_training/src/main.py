@@ -59,8 +59,8 @@ class Main:
 parser = argparse.ArgumentParser()
 parser.add_argument('-dp', '--dataset_path', help='Image Dataset Directory', required=True)
 parser.add_argument('-mep', '--model_export_path', help='Model Export Directory', required=True)
-parser.add_argument('-fe', '--frozen_epochs', help='Number of epochs to train the frozen model with', required=True)
-parser.add_argument('-ufe', '--unfrozen_epochs', help='Number of epochs to train the unfrozen model with', required=True)
+parser.add_argument('-fe', '--frozen_epochs', help='Number of epochs for training the frozen model', required=True)
+parser.add_argument('-ufe', '--unfrozen_epochs', help='Number of epochs for training the unfrozen model', required=True)
 args = parser.parse_args()
 dataset_path = args.dataset_path
 model_export_path = args.model_export_path

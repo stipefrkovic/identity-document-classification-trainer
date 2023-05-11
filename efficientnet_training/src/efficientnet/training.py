@@ -50,11 +50,8 @@ class KerasEfficientNetTrainer(Trainer):
             metrics=["accuracy"],
         )
         logger.info(f"Training model for {epochs} epochs")
-        callbacks = [
-            tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=epochs/3, verbose=1)
-            ]
         history_callback = self.model.fit(
-            train_dataset, validation_data=validation_dataset, epochs=epochs, callbacks=callbacks
+            train_dataset, validation_data=validation_dataset, epochs=epochs
         )
         if len(history_callback.history["loss"]) < epochs:
             logger.info("Early stopping activated (to prevent overfitting)")
