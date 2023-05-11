@@ -31,6 +31,7 @@ services:
       - ./efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32:/app/src/models/my_efficientdet_d0_coco17_tpu-32
       - ./model_export/effdet:/app/src/model_export
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
+      - ./logfiles/effdet:/app/logfiles
     env_file: .env
     depends_on:
       efficientnet_training:
