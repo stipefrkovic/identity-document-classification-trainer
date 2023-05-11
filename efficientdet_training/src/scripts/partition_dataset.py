@@ -18,7 +18,7 @@ from shutil import copyfile
 import argparse
 import math
 import random
-
+from logger import logger
 
 def iterate_dir(source, dest, ratio, copy_xml):
     source = source.replace('\\', '/')
@@ -60,7 +60,7 @@ def iterate_dir(source, dest, ratio, copy_xml):
 
 
 def main():
-
+    logger.info('Partitioning dataset into training and testing sets...')
     # Initiate argument parser
     parser = argparse.ArgumentParser(description="Partition dataset of images into training and testing sets",
                                      formatter_class=argparse.RawTextHelpFormatter)
@@ -94,6 +94,7 @@ def main():
 
     # Now we are ready to start the iteration
     iterate_dir(args.imageDir, args.outputDir, args.ratio, args.xml)
+    logger.info('Partitioning completed.')
 
 
 if __name__ == '__main__':

@@ -28,6 +28,9 @@ import tensorflow.compat.v1 as tf
 from PIL import Image
 from object_detection.utils import dataset_util, label_map_util
 from collections import namedtuple
+from logger import logger
+
+logger.propagate = False
 
 # Initiate argument parser
 parser = argparse.ArgumentParser(
@@ -153,7 +156,7 @@ def create_tf_example(group, path):
 
 
 def main(_):
-
+    logger.info('Creating TFRecords for {}ing.'.format(args.xml_dir.split('/')[-1]))
     writer = tf.python_io.TFRecordWriter(args.output_path)
     path = os.path.join(args.image_dir)
     examples = xml_to_csv(args.xml_dir)
@@ -162,10 +165,11 @@ def main(_):
         tf_example = create_tf_example(group, path)
         writer.write(tf_example.SerializeToString())
     writer.close()
-    print('Successfully created the TFRecord file: {}'.format(args.output_path))
+    # take only the filename from output path
+    logger.info('Successfully created: {}.'.format(args.output_path.split('/')[-1]))
     if args.csv_path is not None:
         examples.to_csv(args.csv_path, index=None)
-        print('Successfully created the CSV file: {}'.format(args.csv_path))
+        logger.debug('Successfully created the CSV file: {}.'.format(args.csv_path))
 
 
 if __name__ == '__main__':
