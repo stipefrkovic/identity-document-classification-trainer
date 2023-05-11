@@ -116,7 +116,7 @@ class KerasEfficientNetTrainer(Trainer):
         self.model = model
 
     def train_frozen_model(
-        self, train_dataset, validation_dataset, epochs=70, learning_rate=1e-2
+        self, train_dataset, validation_dataset, epochs, learning_rate=1e-2
     ):
         logger.debug("Training frozen model")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
@@ -130,7 +130,7 @@ class KerasEfficientNetTrainer(Trainer):
                 layer.trainable = True
 
     def train_unfrozen_model(
-        self, train_dataset, validation_dataset, epochs=40, learning_rate=1e-4
+        self, train_dataset, validation_dataset, epochs, learning_rate=1e-4
     ):
         logger.debug("Training unfrozen model")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)

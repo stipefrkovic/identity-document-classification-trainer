@@ -13,7 +13,7 @@ services:
   efficientnet_training:
     container_name: efficientnet_training
     build: ./efficientnet_training
-    command: python ./src/main.py -dp /keras_image_dataset -mep /model_export
+    command: python ./src/main.py -dp /keras_image_dataset -mep /model_export -fe 70 -ufe 40
     volumes:
       - keras_image_dataset:/app/keras_image_dataset
       - ./model_export/effnet:/app/model_export

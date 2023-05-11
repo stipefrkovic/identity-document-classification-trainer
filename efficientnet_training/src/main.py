@@ -46,19 +46,21 @@ class Main:
         else:
             self.test_dataset = datasets.get("test_dataset")
 
-    def train_model(self):
+    def train_model(self, frozen_epochs=70, unfrozen_epochs=40):
         # TODO update the epochs before Friday
         self.trainer = KerasEfficientNetTrainer(self.num_classes)
         self.trainer.build_frozen_model()
-        self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=10)
+        self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=frozen_epochs)
         self.trainer.unfreeze_model()
-        self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=5)
+        self.trainer.train_unfrozen_model(self.train_dataset, self.validation_dataset, epochs=unfrozen_epochs)
         self.trainer.evaluate_model(self.test_dataset)
         self.trainer.save_model(self.model_export_path)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-dp', '--dataset_path', help='Image Dataset Directory', required=True)
 parser.add_argument('-mep', '--model_export_path', help='Model Export Directory', required=True)
+parser.add_argument('-fe', '--frozen_epochs', help='Number of epochs to train the frozen model with', required=True)
+parser.add_argument('-ufe', '--unfrozen_epochs', help='Number of epochs to train the unfrozen model with', required=True)
 args = parser.parse_args()
 dataset_path = args.dataset_path
 model_export_path = args.model_export_path
@@ -68,5 +70,5 @@ logger.debug("model_export_path: " + model_export_path)
 
 main = Main(dataset_path, model_export_path)
 main.create_dataset()
-main.train_model()
+main.train_model(int(args.frozen_epochs), int(args.unfrozen_epochs))
 
