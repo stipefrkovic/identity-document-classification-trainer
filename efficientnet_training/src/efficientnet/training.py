@@ -69,14 +69,14 @@ class KerasEfficientNetTrainer(Trainer):
         inputs = tf.keras.layers.Input(shape=(self.image_size, self.image_size, 3))
         data_augmentation = tf.keras.Sequential(
             [
-                tf.keras.layers.RandomRotation(factor=0.1),
+                tf.keras.layers.RandomRotation(factor=(-0.1, 0.1)),
                 tf.keras.layers.RandomTranslation(
-                    height_factor=0.05, width_factor=0.05
+                     height_factor=(-0.05, 0.05),  width_factor=(-0.05, 0.05)
                 ),
-                tf.keras.layers.RandomFlip(),
+                tf.keras.layers.RandomFlip(mode="horizontal_and_vertical"),
                 tf.keras.layers.RandomContrast(factor=0.1),
                 tf.keras.layers.RandomZoom(
-                    height_factor=(-0.1, 0), width_factor=(-0.1, 0)
+                    height_factor=(-0.2, 0.1), width_factor=(-0.2, 0.1)
                 ),
             ],
             name="data_augmentation",
