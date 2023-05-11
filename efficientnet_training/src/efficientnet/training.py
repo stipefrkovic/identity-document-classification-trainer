@@ -42,6 +42,27 @@ class KerasEfficientNetTrainer(Trainer):
     def build_model(self):
         logger.debug("Building model")
 
+    def train_model(self, train_dataset, validation_dataset, epochs, learning_rate):
+        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+        self.model.compile(
+            optimizer=optimizer,
+            loss=tf.keras.losses.CategoricalCrossentropy(),
+            metrics=["accuracy"],
+        )
+        logger.info(f"Training model for {epochs} epochs")
+        callbacks = [
+            tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=epochs/3, verbose=1)
+            ]
+        history_callback = self.model.fit(
+            train_dataset, validation_data=validation_dataset, epochs=epochs, callbacks=callbacks
+        )
+        if len(history_callback.history["loss"]) < epochs:
+            logger.info("Early stopping activated (to prevent overfitting)")
+        logger.info("Train loss: " + str(history_callback.history["loss"]))
+        logger.info("Train accuracy: " + str(history_callback.history["accuracy"]))
+        logger.info("Validation loss: " + str(history_callback.history["val_loss"]))
+        logger.info("Validation accuracy: " + str(history_callback.history["val_accuracy"]))
+
     def build_frozen_model(self):
         # Build first layers
         logger.debug("Building frozen model")
@@ -94,24 +115,8 @@ class KerasEfficientNetTrainer(Trainer):
         model = tf.keras.Model(inputs, outputs, name="EfficientNetB0")
         self.model = model
 
-    def train_model(self, train_dataset, validation_dataset, epochs, learning_rate):
-        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-        self.model.compile(
-            optimizer=optimizer,
-            loss=tf.keras.losses.CategoricalCrossentropy(),
-            metrics=["accuracy"],
-        )
-        logger.info(f"Training model for {epochs} epochs")
-        history_callback = self.model.fit(
-            train_dataset, validation_data=validation_dataset, epochs=epochs
-        )
-        logger.info("Train loss: " + str(history_callback.history["loss"]))
-        logger.info("Train accuracy: " + str(history_callback.history["accuracy"]))
-        logger.info("Validation loss: " + str(history_callback.history["val_loss"]))
-        logger.info("Validation accuracy: " + str(history_callback.history["val_accuracy"]))
-
     def train_frozen_model(
-        self, train_dataset, validation_dataset, epochs=40, learning_rate=1e-2
+        self, train_dataset, validation_dataset, epochs=70, learning_rate=1e-2
     ):
         logger.debug("Training frozen model")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
@@ -125,7 +130,7 @@ class KerasEfficientNetTrainer(Trainer):
                 layer.trainable = True
 
     def train_unfrozen_model(
-        self, train_dataset, validation_dataset, epochs=20, learning_rate=1e-4
+        self, train_dataset, validation_dataset, epochs=40, learning_rate=1e-4
     ):
         logger.debug("Training unfrozen model")
         self.train_model(train_dataset, validation_dataset, epochs, learning_rate)
