@@ -17,6 +17,7 @@ services:
     volumes:
       - keras_image_dataset:/app/keras_image_dataset
       - ./model_export/effnet:/app/model_export
+      - ./logfiles/effnet:/app/logfiles
     env_file: .env
     depends_on:
       converter:

@@ -134,6 +134,7 @@ dmypy.json
 nn_trainer/src/nn_trainer/stanford_dogs_dataset
 nn_trainer/src/nn_trainer/other
 
+logfiles*
 pascalVOCInput*
 modelOutput*
 model_export*
