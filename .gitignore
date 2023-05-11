@@ -142,6 +142,7 @@ pascal_voc_dataset*
 
 efficientdet_training/src/exported-models
 efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32/train/*
+efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32/eval
 efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32/*.index
 efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32/*.data-00000-of-00001
 efficientdet_training/src/models/my_efficientdet_d0_coco17_tpu-32/checkpoint
