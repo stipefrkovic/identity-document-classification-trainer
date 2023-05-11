@@ -3,8 +3,11 @@ import struct
 import os
 import glob
 from logger import logger
+import logging
 
 logger.propagate = False
+
+logging.getLogger('tensorflow').setLevel(logging.ERROR) # suppress warnings
 
 def get_latest_tfevent_file(train_folder_path):
     # get a list of all tfevent files in the train folder
