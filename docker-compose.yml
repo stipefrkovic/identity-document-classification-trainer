@@ -8,6 +8,7 @@ services:
     volumes:
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
       - keras_image_dataset:/app/keras_image_dataset
+      - ./logfiles/convert:/app/logfiles
     env_file: .env
 
   efficientnet_training:
