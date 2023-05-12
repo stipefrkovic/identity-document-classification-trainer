@@ -115,15 +115,22 @@ def run_inference(model, category_index, image_path):
             for object_element in object_elements:
                 ground_truth_classes.append(object_element.getElementsByTagName('name')[0].firstChild.data)
 
-            lengthGTC = len(ground_truth_classes)
+            ground_truth_element = ground_truth_classes[0]
             # Get the best predicted classes of length equal to the ground truth classes
-            predicted_classes = []
-            if lengthGTC > len(output_dict['detection_classes']):
-                lengthGTC = len(output_dict['detection_classes'])
-            for j in range(lengthGTC):
-                predicted_classes.append(category_index[output_dict['detection_classes'][j]]['name'])
+            highest_prediction_class =  category_index[output_dict['detection_classes'][0]]['name']
+            # predicted_classes = []
+            # if lengthGTC > len(output_dict['detection_classes']):
+            #     lengthGTC = len(output_dict['detection_classes'])
+            # for j in range(lengthGTC):
+            #     predicted_classes.append(category_index[output_dict['detection_classes'][j]]['name'])
 
-            if predicted_classes == ground_truth_classes:
+            # if predicted_classes == ground_truth_classes:
+            #     accuracy = accuracy + 1
+
+            logger.debug("Ground truth: %s", ground_truth_element)
+            logger.debug("Predicted: %s", highest_prediction_class)
+
+            if highest_prediction_class == ground_truth_element:
                 accuracy = accuracy + 1
             
             # plt.imshow(image_np)
