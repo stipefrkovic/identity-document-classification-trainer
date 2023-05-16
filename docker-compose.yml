@@ -4,6 +4,7 @@ services:
   converter:
     container_name: converter
     build: ./converter
+    image: andrewrutherfoord/pascalvol-image-converter:latest
     command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
     volumes:
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
@@ -13,6 +14,7 @@ services:
 
   efficientnet_training:
     container_name: efficientnet_training
+    image: andrewrutherfoord/efficientnet_training:latest
     build: ./efficientnet_training
     command: python ./src/main.py -dp /keras_image_dataset -mep /model_export -fe 70 -ufe 40
     volumes:
@@ -26,6 +28,7 @@ services:
 
   efficientdet_training:
     container_name: efficientdet_training
+    image: andrewrutherfoord/efficientdet_training:latest
     build: ./efficientdet_training
     command: /bin/bash /app/src/run.sh
     volumes:
