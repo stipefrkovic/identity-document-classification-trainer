@@ -116,47 +116,19 @@ def run_inference(model, category_index, image_path):
                 ground_truth_classes.append(object_element.getElementsByTagName('name')[0].firstChild.data)
 
             ground_truth_element = ground_truth_classes[0]
-            # Get the best predicted classes of length equal to the ground truth classes
             highest_prediction_class =  category_index[output_dict['detection_classes'][0]]['name']
-            # predicted_classes = []
-            # if lengthGTC > len(output_dict['detection_classes']):
-            #     lengthGTC = len(output_dict['detection_classes'])
-            # for j in range(lengthGTC):
-            #     predicted_classes.append(category_index[output_dict['detection_classes'][j]]['name'])
-
-            # if predicted_classes == ground_truth_classes:
-            #     accuracy = accuracy + 1
 
             logger.debug("Ground truth: %s", ground_truth_element)
             logger.debug("Predicted: %s", highest_prediction_class)
 
             if highest_prediction_class == ground_truth_element:
                 accuracy = accuracy + 1
-            
-            # plt.imshow(image_np)
-            # plt.savefig("outputs/detection_output{}.png".format(i))  # make sure to make an outputs folder
 
             i = i + 1
         accuracy = accuracy / i
         logger.info('Evaluation of the model finished.')
         logger.info('Number of images tested: {}'.format(i))
         logger.info('Accuracy: {}'.format(accuracy))
-    # else:
-    #     image_np = load_image_into_numpy_array(image_path)
-    #     # Actual detection.
-    #     output_dict = run_inference_for_single_image(model, image_np)
-    #     # Visualization of the results of a detection.
-    #     vis_util.visualize_boxes_and_labels_on_image_array(
-    #         image_np,
-    #         output_dict['detection_boxes'],
-    #         output_dict['detection_classes'],
-    #         output_dict['detection_scores'],
-    #         category_index,
-    #         instance_masks=output_dict.get('detection_masks_reframed', None),
-    #         use_normalized_coordinates=True,
-    #         line_thickness=8)
-    #     plt.imshow(image_np)
-    #     plt.show()
 
 
 if __name__ == '__main__':
@@ -176,6 +148,3 @@ if __name__ == '__main__':
     logger.debug('Labelmap loaded successfully.')
 
     run_inference(detection_model, category_index, args.image_path)
-
-# Command to start script
-#  python .\detect_from_images.py -m ssd_mobilenet_v2_320x320_coco17_tpu-8\saved_model -l .\data\mscoco_label_map.pbtxt -i .\test_images
