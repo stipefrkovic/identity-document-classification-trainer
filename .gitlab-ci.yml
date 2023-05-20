@@ -11,7 +11,7 @@ stages:
 build:
   stage: build
   before_script:
-    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
     - cp .env.example .env
   script:
     - docker compose pull
