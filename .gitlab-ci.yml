@@ -1,18 +1,24 @@
 
-image: docker:latest
+image: docker:20.10.16
 
 services:
-  - docker:dind
+  - docker:20.10.16-dind
 
 stages:
   - build
   - sonarqube-check
 
 build:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
   stage: build
+  before_script:
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
+    - cp .env.example .env
   script:
-    - echo "Deactivated"
-    # - docker-compose build
+    - docker compose pull
+    - docker compose build
+    - docker compose push
   
 sonarqube-check:
   stage: sonarqube-check
