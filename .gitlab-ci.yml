@@ -4,49 +4,36 @@ image: docker:20.10.16
 services:
   - docker:20.10.16-dind
 
+stages:
+  - build
+  - sonarqube-check
+
 build:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
   stage: build
   before_script:
-    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
     - cp .env.example .env
   script:
     - docker compose pull
     - docker compose build
     - docker compose push
-
-# image: docker:20.10.16
-
-# services:
-#   - docker:20.10.16-dind
-
-# stages:
-#   - build
-#   - sonarqube-check
-
-# build:
-#   stage: build
-#   before_script:
-#     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
-#     - cp .env.example .env
-#   script:
-#     - docker compose pull
-#     - docker compose build
-#     - docker compose push
   
-# sonarqube-check:
-#   stage: sonarqube-check
-#   image: 
-#     name: sonarsource/sonar-scanner-cli:latest
-#     entrypoint: [""]
-#   variables:
-#     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-#     GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
-#   cache:
-#     key: "${CI_JOB_NAME}"
-#     paths:
-#       - .sonar/cache
-#   script: 
-#     - sonar-scanner
-#   allow_failure: true
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == 'main'
+sonarqube-check:
+  stage: sonarqube-check
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+    - sonar-scanner
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'main'
