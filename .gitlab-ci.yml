@@ -1,8 +1,8 @@
 
-image: docker:latest
+image: docker:20.10.16
 
 services:
-  - docker:dind
+  - docker:20.10.16-dind
 
 stages:
   - build
