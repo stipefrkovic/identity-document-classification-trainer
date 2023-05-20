@@ -10,9 +10,13 @@ stages:
 
 build:
   stage: build
+  before_script:
+    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+    - cp .env.example .env
   script:
-    - echo "Deactivated"
-    # - docker-compose build
+    - docker compose pull
+    - docker compose build
+    - docker compose push
   
 sonarqube-check:
   stage: sonarqube-check
