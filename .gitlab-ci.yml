@@ -5,7 +5,7 @@ services:
   - docker:20.10.16-dind
 
 stages:
-  - build
+  # - build
   - sonarqube-check
 
 build:
