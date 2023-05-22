@@ -1,27 +1,25 @@
 # ING 2 Project - NN Trainer
 
-This python project is used to train the machine learning model that will be used to categorise documents.
+This is a Python project used to train two deep learning models (EfficientDet and EfficientNet) to classify identity documents.
 
-As this project is executed using docker-compose the host system needs to have Docker installed.
 
 ## Contents
 
-* [Training Data](#training-data)
-* [Efficient Net](#efficient-net)
-* [Efficient Det](#efficient-det)
+* [EfficientDet](#efficient-det)
+* [EfficientNet](#efficient-net)
 * [Setting up](#setting-up)
 * [Running the application](#running-the-application)
 
 
-## Training Data
+## EfficientDet
 
-The training data will come in a PascalVOC format, which is "a format used to store annotations for object detection datasets" [mlhive](https://mlhive.com/2022/02/read-and-write-pascal-voc-xml-annotations-in-python). Each image in the dataset will be annotated with 3 classes:
+EfficientDet is an efficient and accurate family of deep learning models used for object detection tasks. In this case, it requires it's training dataset to be provided in the Pascal VOC format. Each image in the dataset will be annotated as one of 3 classes:
 
 * id_card
 * driving_license
 * passport
 
-The file structure will look like this:
+and the directory structure of the dataset should look like the following:
 
 ```bash
 ├───Annotations
@@ -31,18 +29,19 @@ The file structure will look like this:
 |       ...
 │
 └───images
-        passport.jpg
-        id_card.jpg
-        driving_license.jpg
+        passport_1.jpg
+        id_card_1.jpg
+        driving_license_1.jpg
         ...
 
 ```
 
-## Efficient Net
+Since the output dataset of the labelling application is in this format, no conversion is necessary. The EfficientDet model will be trained on the dataset in the `pascal_voc_dataset` directory and saved in the `model_export/effdet` directory. From out testing, with a dataset of 50 documents the whole process takes around 3 hours on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset.
 
-EfficientNet is a machine learning model that ...
 
-This requires the training data to be provided in an image dataset format. This means that the images should be split into subdirectories based on their category. In this case it should look like the following.
+## EfficientNet and Converter
+
+EfficientNet is an efficient and accurate family of deep learning models used for image classification tasks. It requires it's training dataset to be provided in an image dataset format. This means that the images should be split into subdirectories based on their classes. In this case, the directory structure should look like the following:
 
 ```bash
 ├───driving_license
@@ -61,17 +60,12 @@ This requires the training data to be provided in an image dataset format. This 
         ... 
 ```
 
-Since this application receives a Pascal VOC format, we first need to convert the dataset. This is done using a small script which gets the annotation classes from the xml file for each class.
+Since the output dataset of the labelling application is in the Pascal VOC format, it first needs to be converted into the aforementioned image dataset format. This is done with a small Converter script which will get the Pascal VOC dataset in the `pascal_voc_dataset` directory and put the converted dataset in the `keras_image_dataset` directory. Once the dataset conversion is completed, the model will be trained. From out testing, with a dataset of 50 documents the whole process takes around 10 minutes on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset. Once the training is completed, the model will be saved in the `model_export/effnet` directory.
 
-Once the dataset conversion is complete, the model is trained. From out testing, with 50 documents it take about 10 minutes. This will increase with the number of documents.
-
-Once the model is trained, the output will be in the `model` directory.
-
-## Efficient Det
-
-The Efficient Det model is trained using a dataset in the Pascal VOC format. Therefore no conversion is necessary.
 
 ## Setting up
+
+As this project is executed using docker-compose the host system needs to have Docker installed.
 
 Copy the `.env` file from `.env.example`.
 
@@ -98,9 +92,9 @@ docker-compose up
 
 This will execute the applications in the following order:
 
-1. Converter
-2. Efficient Net Trainer
-3. Efficient Det Trainer
+1. converter
+2. efficientnet_training
+3. efficientdet_training
 
 We recommend not running the docker compose in detached mode (don't run `docker-compose -d`) so that the log outputs can be seen.
 
