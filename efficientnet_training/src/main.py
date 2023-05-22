@@ -47,7 +47,6 @@ class Main:
             self.test_dataset = datasets.get("test_dataset")
 
     def train_model(self, frozen_epochs=70, unfrozen_epochs=40):
-        # TODO update the epochs before Friday
         self.trainer = KerasEfficientNetTrainer(self.num_classes)
         self.trainer.build_frozen_model()
         self.trainer.train_frozen_model(self.train_dataset, self.validation_dataset, epochs=frozen_epochs)

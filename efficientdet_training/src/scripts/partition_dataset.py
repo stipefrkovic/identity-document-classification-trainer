@@ -8,7 +8,7 @@ from logger import logger
 
 def iterate_dir(source, dest, train_split, evaluation_split, test_split, copy_xml):
     if train_split + evaluation_split + test_split != 1.0:
-        raise Exception("The dataset splits do not add up to 1.")
+        raise ValueError("The dataset splits do not add up to 1.")
 
     if not os.path.exists(dest):
         os.makedirs(dest)
@@ -36,7 +36,7 @@ def iterate_dir(source, dest, train_split, evaluation_split, test_split, copy_xm
     num_test_images = math.ceil(test_split*num_images)
     num_validation_images = math.ceil(evaluation_split*num_images)
 
-    for i in range(num_test_images):
+    for _ in range(num_test_images):
         idx = random.randint(0, len(images)-1)
         filename = images[idx]
         copyfile(os.path.join(images_dir, filename),
@@ -47,7 +47,7 @@ def iterate_dir(source, dest, train_split, evaluation_split, test_split, copy_xm
                      os.path.join(test_dir,xml_filename))
         images.remove(images[idx])
 
-    for i in range(num_validation_images):
+    for _ in range(num_validation_images):
         idx = random.randint(0, len(images)-1)
         filename = images[idx]
         copyfile(os.path.join(images_dir, filename),
