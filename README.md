@@ -5,11 +5,10 @@ This is a Python project used to train two deep learning models (EfficientDet an
 
 ## Contents
 
-* [EfficientDet](#efficient-det)
-* [EfficientNet](#efficient-net)
-* [Setting up](#setting-up)
-* [Running the application](#running-the-application)
-
+- [EfficientDet](#efficientdet)
+- [EfficientNet and Converter](#efficientnet-and-converter)
+- [Setting up](#setting-up)
+- [Running the application](#running-the-application)
 
 ## EfficientDet
 
