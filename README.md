@@ -92,7 +92,7 @@ Now copy the zip file, exported from LabelStudio, into it.
 Build and run the docker compose.
 
 ```bash
-docker-compose build --no-cache
+docker-compose pull
 docker-compose up 
 ```
 
