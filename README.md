@@ -29,9 +29,9 @@ and the directory structure of the dataset should look like the following:
 |       ...
 │
 └───images
-        passport.jpg
-        id_card.jpg
-        driving_license.jpg
+        passport_1.jpg
+        id_card_1.jpg
+        driving_license_1.jpg
         ...
 
 ```
