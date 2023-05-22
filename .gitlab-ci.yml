@@ -8,17 +8,17 @@ stages:
   # - build
   - sonarqube-check
 
-build:
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'main'
-  stage: build
-  before_script:
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
-    - cp .env.example .env
-  script:
-    - docker compose pull
-    - docker compose build
-    - docker compose push
+# build:
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == 'main'
+#   stage: build
+#   before_script:
+#     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
+#     - cp .env.example .env
+#   script:
+#     - docker compose pull
+#     - docker compose build
+#     - docker compose push
   
 sonarqube-check:
   stage: sonarqube-check
