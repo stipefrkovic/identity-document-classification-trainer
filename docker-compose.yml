@@ -14,9 +14,9 @@ services:
 
   efficientnet_training:
     container_name: efficientnet_training
-    image: andrewrutherfoord/efficientnet_training:latest
+    # image: andrewrutherfoord/efficientnet_training:latest
     build: ./efficientnet_training
-    command: python ./src/main.py -dp /keras_image_dataset -mep /model_export -fe 70 -ufe 40
+    command: python ./src/main.py -dp /keras_image_dataset -mep /model_export
     volumes:
       - keras_image_dataset:/app/keras_image_dataset
       - ./model_export/effnet:/app/model_export
@@ -40,8 +40,6 @@ services:
     depends_on:
       efficientnet_training:
         condition: service_completed_successfully
-
-
     
 volumes:
   keras_image_dataset:
