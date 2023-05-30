@@ -16,28 +16,28 @@ class DatasetLoader(ABC):
 
     def get_num_classes(self):
         if self.num_classes is None:
-            logger.error("Dataset not loaded.")
+            logger.error("Dataset not loaded")
             exit(1)
         else:
             return self.num_classes
 
     def get_train_dataset(self):
         if self.train_dataset is None:
-            logger.error("Dataset not split.")
+            logger.error("Dataset not split")
             exit(1)
         else:
             return self.train_dataset
 
     def get_validation_dataset(self):
         if self.validation_dataset is None:
-            logger.error("Dataset not split.")
+            logger.error("Dataset not split")
             exit(1)
         else:
             return self.validation_dataset
 
     def get_test_dataset(self):
         if self.test_dataset is None:
-            logger.error("Dataset not split.")
+            logger.error("Dataset not split")
             exit(1)
         else:
             return self.test_dataset
@@ -57,7 +57,7 @@ class KerasImageDatasetLoader(DatasetLoader):
 
     def load_dataset(self, dataset_path, image_size, batch_size=8):
         logger.debug(f"Image size: {image_size}")
-        logger.info(f"Batch size: {batch_size}")
+        logger.debug(f"Batch size: {batch_size}")
 
         full_dataset_path = str(Path().absolute()) + dataset_path
         logger.debug(f"Full dataset path: {full_dataset_path}")
@@ -76,7 +76,7 @@ class KerasImageDatasetLoader(DatasetLoader):
 
     def split_dataset(self, train_split, validation_split, test_split):
         if train_split + validation_split + test_split != 1.0:
-            logger.error("The dataset splits do not add up to 1.")
+            logger.error("The dataset splits do not add up to 1")
             exit(1)
 
         dataset_size = self.dataset.cardinality().numpy()
@@ -87,7 +87,7 @@ class KerasImageDatasetLoader(DatasetLoader):
         test_dataset_size = int(test_split * dataset_size)
         if train_dataset_size == 0 or validation_dataset_size == 0 or test_split == 0:
             logger.error(
-                "Desired size of a dataset is 0: modify the dataset split ratios/batch size or use a bigger dataset.")
+                "Desired size of a dataset is 0: modify the dataset split ratios/batch size or use a bigger dataset")
             exit(1)
         logger.debug(f"Desired size of train dataset: {train_dataset_size}")
         logger.debug(f"Desired size of validation dataset: {validation_dataset_size}")

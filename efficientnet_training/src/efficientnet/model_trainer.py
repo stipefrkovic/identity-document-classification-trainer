@@ -77,11 +77,11 @@ class KerasEfficientNetTrainer(ModelTrainer):
         return image_augmentation
 
     def load_model_weights(self, model_weights_path="./src/efficientnet/weights/efficientnetb0_notop.h5"):
-        logger.debug("Loading weights")
+        logger.debug(f"Loading weights from {model_weights_path}")
         try:
             self.model.load_weights(model_weights_path)
         except FileNotFoundError as e:
-            logger.error(f"Could not find weights: {model_weights_path}.")
+            logger.error(f"Could not find weights: {model_weights_path}")
             logger.error(e)
             exit(1)
 
