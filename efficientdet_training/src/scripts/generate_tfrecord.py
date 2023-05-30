@@ -28,7 +28,7 @@ import tensorflow.compat.v1 as tf
 from PIL import Image
 from object_detection.utils import dataset_util, label_map_util
 from collections import namedtuple
-from logger import logger
+from utils.logger import logger
 
 logger.propagate = False
 

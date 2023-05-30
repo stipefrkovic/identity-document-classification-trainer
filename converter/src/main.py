@@ -3,7 +3,7 @@ import shutil
 import argparse
 import xml.etree.ElementTree as ET
 
-from logger import logger
+from utils.logger import logger
 
 
 def validate_inputs(src_dir):

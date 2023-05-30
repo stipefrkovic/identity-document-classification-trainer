@@ -4,12 +4,13 @@ services:
   converter:
     container_name: converter
     build: ./converter
-    image: andrewrutherfoord/pascalvol-image-converter:latest
+    # image: andrewrutherfoord/pascalvol-image-converter:latest
     command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
     volumes:
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
       - keras_image_dataset:/app/keras_image_dataset
       - ./logfiles/convert:/app/logfiles
+      - ./common_utils:/app/src/utils
     env_file: .env
 
   efficientnet_training:
@@ -21,6 +22,7 @@ services:
       - keras_image_dataset:/app/keras_image_dataset
       - ./model_export/effnet:/app/model_export
       - ./logfiles/effnet:/app/logfiles
+      - ./common_utils:/app/src/utils
     env_file: .env
     depends_on:
       converter:
@@ -28,7 +30,7 @@ services:
 
   efficientdet_training:
     container_name: efficientdet_training
-    image: andrewrutherfoord/efficientdet_training:latest
+    # image: andrewrutherfoord/efficientdet_training:latest
     build: ./efficientdet_training
     command: /bin/bash /app/src/run.sh
     volumes:
@@ -36,6 +38,7 @@ services:
       - ./model_export/effdet:/app/src/model_export
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
       - ./logfiles/effdet:/app/logfiles
+      - ./common_utils:/app/src/scripts/utils
     env_file: .env
     depends_on:
       efficientnet_training:

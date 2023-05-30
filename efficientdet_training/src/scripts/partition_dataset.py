@@ -4,7 +4,7 @@ from shutil import copyfile
 import argparse
 import math
 import random
-from logger import logger
+from utils.logger import logger
 
 def iterate_dir(source, dest, train_split, evaluation_split, test_split, copy_xml):
     if train_split + evaluation_split + test_split != 1.0:

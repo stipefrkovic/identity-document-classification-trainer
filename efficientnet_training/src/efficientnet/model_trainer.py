@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from tensorflow import keras
 from pathlib import Path
 
-from logger import logger
+from utils.logger import logger
 
 
 class ModelTrainer(ABC):

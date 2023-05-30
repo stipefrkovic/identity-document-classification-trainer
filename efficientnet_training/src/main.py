@@ -1,6 +1,6 @@
 from efficientnet.dataset_loader import KerasImageDatasetLoader
 from efficientnet.model_trainer import KerasEfficientNetTrainer
-from logger import logger
+from utils.logger import logger
 import argparse
 
 parser = argparse.ArgumentParser()

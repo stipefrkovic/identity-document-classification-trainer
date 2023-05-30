@@ -3,7 +3,7 @@ from tensorflow.keras import utils
 from tensorflow import data
 from pathlib import Path
 
-from logger import logger
+from utils.logger import logger
 
 
 class DatasetLoader(ABC):
