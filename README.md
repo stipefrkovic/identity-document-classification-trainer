@@ -13,7 +13,7 @@ This is a Python project used to train two deep learning models (EfficientDet an
 
 ## EfficientDet
 
-EfficientDet is an efficient and accurate family of deep learning models used for object detection tasks. In this case, it requires it's training dataset to be provided in the Pascal VOC format. Each image in the dataset will be annotated as one of 3 classes:
+EfficientDet is an efficient and accurate family of deep learning models used for object detection tasks. Our implementation t requires it's training dataset to be provided in the Pascal VOC format. Each image in the dataset will be annotated as one of 3 classes:
 
 * id_card
 * driving_license
