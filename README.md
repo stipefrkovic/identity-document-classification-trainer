@@ -39,7 +39,7 @@ and the directory structure of the dataset should look like the following:
 Since the output dataset of the labelling application is in this format, no conversion is necessary. The EfficientDet model will be trained on the dataset in the `pascal_voc_dataset` directory and saved in the `model_export/effdet` directory. From out testing, with a dataset of 50 documents the whole process takes around 3 hours on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset.
 
 
-## EfficientNet and Converter
+## EfficientNet
 
 EfficientNet is an efficient and accurate family of deep learning models used for image classification tasks. It requires it's training dataset to be provided in an image dataset format. This means that the images should be split into subdirectories based on their classes. In this case, the directory structure should look like the following:
 
@@ -60,7 +60,7 @@ EfficientNet is an efficient and accurate family of deep learning models used fo
         ... 
 ```
 
-Since the output dataset of the labelling application is in the Pascal VOC format, it first needs to be converted into the aforementioned image dataset format. This is done with a small Converter script which will get the Pascal VOC dataset in the `pascal_voc_dataset` directory and put the converted dataset in the `keras_image_dataset` directory. Once the dataset conversion is completed, the model will be trained. From out testing, with a dataset of 50 documents the whole process takes around 10 minutes on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset. Once the training is completed, the model will be saved in the `model_export/effnet` directory.
+Since the output dataset of the labelling application is in the Pascal VOC format, it first needs to be converted into the aforementioned image dataset format. This is done with the `DatasetConverter` which will input the Pascal VOC dataset in the `pascal_voc_dataset` directory and output the converted dataset in the `keras_image_dataset` directory. Once the dataset conversion is completed, the dataset will be loaded and split with the `DatasetLoader` and model will be built, trained, evaluated, and saved with the `ModelTrainer`. From out testing, with a dataset of 50 documents the whole process takes around 10 minutes on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset. Once the training is completed, the model will be saved in the `model_export/effnet` directory.
 
 
 ## Setting up
@@ -92,9 +92,8 @@ docker-compose up
 
 This will execute the applications in the following order:
 
-1. converter
-2. efficientnet_training
-3. efficientdet_training
+1. efficientnet_training
+2. efficientdet_training
 
 We recommend not running the docker compose in detached mode (don't run `docker-compose -d`) so that the log outputs can be seen.
 
