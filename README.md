@@ -79,7 +79,7 @@ Create a directory called `pascal_voc_dataset`.
 mkdir pascal_voc_dataset
 ```
 
-Now copy the zip file, exported from LabelStudio, into it.
+Now extract the zip file, exported from LabelStudio, into the newly made `pascal_voc_dataset` folder.
 
 ## Running the application
 
