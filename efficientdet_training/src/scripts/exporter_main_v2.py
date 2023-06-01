@@ -109,7 +109,7 @@ from google.protobuf import text_format
 from object_detection import exporter_lib_v2
 from object_detection.protos import pipeline_pb2
 import logging
-from logger import logger
+from utils.logger import logger
 
 logging.getLogger('tensorflow').setLevel(logging.ERROR) # suppress warnings
 logging.getLogger('object_detection').setLevel(logging.ERROR) # suppress warnings

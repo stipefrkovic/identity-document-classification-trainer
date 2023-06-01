@@ -1,30 +1,18 @@
 version: '3'
 
 services:
-  converter:
-    container_name: converter
-    build: ./converter
-    image: andrewrutherfoord/pascalvol-image-converter:latest
-    command: python src/main.py -i ./pascal_voc_dataset -o ./keras_image_dataset
-    volumes:
-      - ./pascal_voc_dataset:/app/pascal_voc_dataset
-      - keras_image_dataset:/app/keras_image_dataset
-      - ./logfiles/convert:/app/logfiles
-    env_file: .env
-
   efficientnet_training:
     container_name: efficientnet_training
     image: andrewrutherfoord/efficientnet_training:latest
     build: ./efficientnet_training
-    command: python ./src/main.py -dp /keras_image_dataset -mep /model_export -fe 70 -ufe 40
+    command: python ./src/main.py -pvdp /pascal_voc_dataset -kidp /keras_image_dataset -mep /model_export
     volumes:
+      - ./pascal_voc_dataset:/app/pascal_voc_dataset
       - keras_image_dataset:/app/keras_image_dataset
       - ./model_export/effnet:/app/model_export
       - ./logfiles/effnet:/app/logfiles
+      - ./common_utils:/app/src/utils
     env_file: .env
-    depends_on:
-      converter:
-        condition: service_completed_successfully
 
   efficientdet_training:
     container_name: efficientdet_training
@@ -36,12 +24,11 @@ services:
       - ./model_export/effdet:/app/src/model_export
       - ./pascal_voc_dataset:/app/pascal_voc_dataset
       - ./logfiles/effdet:/app/logfiles
+      - ./common_utils:/app/src/scripts/utils
     env_file: .env
     depends_on:
       efficientnet_training:
         condition: service_completed_successfully
-
-
     
 volumes:
   keras_image_dataset:
