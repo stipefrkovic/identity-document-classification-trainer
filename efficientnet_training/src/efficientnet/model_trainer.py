@@ -38,7 +38,7 @@ class KerasEfficientNetTrainer(ModelTrainer):
         self.dataset_loader.split_dataset(train_split, validation_split, test_split)
         self.num_classes = self.dataset_loader.get_num_classes()
 
-    def train_model(self, train_dataset, validation_dataset, epochs, learning_rate):
+    def train_model(self, epochs, learning_rate):
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate)
         self.model.compile(
             optimizer=optimizer,
@@ -47,7 +47,9 @@ class KerasEfficientNetTrainer(ModelTrainer):
         )
         logger.info(f"Training model for {epochs} epochs")
         history_callback = self.model.fit(
-            train_dataset, validation_data=validation_dataset, epochs=epochs
+            self.dataset_loader.get_train_dataset(),
+            validation_data=self.dataset_loader.get_validation_dataset(),
+            epochs=epochs
         )
         logger.info("Train loss: " + str(history_callback.history["loss"]))
         logger.info("Train accuracy: " + str(history_callback.history["accuracy"]))
@@ -119,9 +121,7 @@ class KerasEfficientNetTrainer(ModelTrainer):
     def train_frozen_model(self, epochs=70, learning_rate=1e-2):
         logger.debug("Training frozen model")
 
-        self.train_model(self.dataset_loader.get_train_dataset(),
-                         self.dataset_loader.get_validation_dataset(),
-                         epochs,
+        self.train_model(epochs,
                          learning_rate)
 
     def unfreeze_model(self):
@@ -135,9 +135,7 @@ class KerasEfficientNetTrainer(ModelTrainer):
     def train_unfrozen_model(self, epochs=40, learning_rate=1e-4):
         logger.debug("Training unfrozen model")
 
-        self.train_model(self.dataset_loader.get_train_dataset(),
-                         self.dataset_loader.get_validation_dataset(),
-                         epochs,
+        self.train_model(epochs,
                          learning_rate)
 
     def build_and_train_model(self):
