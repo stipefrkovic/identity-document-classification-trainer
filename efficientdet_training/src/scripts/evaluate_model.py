@@ -1,4 +1,4 @@
-from logger import logger
+from utils.logger import logger
 
 import numpy as np
 import argparse

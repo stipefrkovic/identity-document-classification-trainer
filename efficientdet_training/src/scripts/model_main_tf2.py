@@ -35,7 +35,7 @@ from absl import flags
 import tensorflow.compat.v2 as tf
 from object_detection import model_lib_v2
 import logging
-from logger import logger
+from utils.logger import logger
 
 logging.getLogger('tensorflow').setLevel(logging.ERROR) # suppress warnings
 logging.getLogger('object_detection').setLevel(logging.ERROR) # suppress warnings
@@ -84,7 +84,7 @@ flags.DEFINE_boolean('record_summaries', True,
 FLAGS = flags.FLAGS
 
 
-def main():
+def main(unused_argv):
   flags.mark_flag_as_required('model_dir')
   flags.mark_flag_as_required('pipeline_config_path')
   tf.config.set_soft_device_placement(True)

@@ -2,7 +2,7 @@ from tensorflow.python.summary.summary_iterator import summary_iterator
 import struct
 import os
 import glob
-from logger import logger
+from utils.logger import logger
 import logging
 
 logger.propagate = False
