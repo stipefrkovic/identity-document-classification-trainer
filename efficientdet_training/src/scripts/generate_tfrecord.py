@@ -32,6 +32,8 @@ from utils.logger import logger
 
 logger.propagate = False
 
+Image.MAX_IMAGE_PIXELS = None
+
 # Initiate argument parser
 parser = argparse.ArgumentParser(
     description="Sample TensorFlow XML-to-TFRecord converter")

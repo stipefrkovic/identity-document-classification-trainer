@@ -115,14 +115,20 @@ def run_inference(model, category_index, image_path):
             for object_element in object_elements:
                 ground_truth_classes.append(object_element.getElementsByTagName('name')[0].firstChild.data)
 
+            if len(ground_truth_classes) == 0:
+                continue
             ground_truth_element = ground_truth_classes[0]
-            highest_prediction_class =  category_index[output_dict['detection_classes'][0]]['name']
+            if len(output_dict['detection_classes']) > 0:
+                highest_prediction_class = category_index[output_dict['detection_classes'][0]]['name']
 
-            logger.debug("Ground truth: %s", ground_truth_element)
-            logger.debug("Predicted: %s", highest_prediction_class)
+                logger.debug("Ground truth: %s", ground_truth_element)
+                logger.debug("Predicted: %s", highest_prediction_class)
 
-            if highest_prediction_class == ground_truth_element:
-                accuracy = accuracy + 1
+                if highest_prediction_class == ground_truth_element:
+                    accuracy = accuracy + 1
+            else:
+                logger.debug("Ground truth: %s", ground_truth_element)
+                logger.debug("Predicted: None")
 
             i = i + 1
         accuracy = accuracy / i
