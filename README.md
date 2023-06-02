@@ -2,7 +2,6 @@
 
 This is a Python project used to train two deep learning models (EfficientDet and EfficientNet) to classify identity documents.
 
-
 ## Contents
 
 - [EfficientDet](#efficientdet)
@@ -14,9 +13,9 @@ This is a Python project used to train two deep learning models (EfficientDet an
 
 EfficientDet is an efficient and accurate family of deep learning models used for object detection tasks. Our implementation t requires it's training dataset to be provided in the Pascal VOC format. Each image in the dataset will be annotated as one of 3 classes:
 
-* id_card
-* driving_license
-* passport
+- id_card
+- driving_license
+- passport
 
 and the directory structure of the dataset should look like the following:
 
@@ -37,7 +36,6 @@ and the directory structure of the dataset should look like the following:
 
 Since the output dataset of the labelling application is in this format, no conversion is necessary. The EfficientDet model will be trained on the dataset in the `pascal_voc_dataset` directory and saved in the `model_export/effdet` directory. From out testing, with a dataset of 50 documents the whole process takes around 3 hours on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset.
 
-
 ## EfficientNet
 
 EfficientNet is an efficient and accurate family of deep learning models used for image classification tasks. The implementation we are using requires the training dataset to be provided in a Keras image dataset format. This means that the images should be split into subdirectories based on their classes. In our case, the directory structure should look like the following:
@@ -51,16 +49,15 @@ EfficientNet is an efficient and accurate family of deep learning models used fo
 ├───id_card
 │       id_card_1.jpg
 │       id_card_2.jpg
-│       ... 
+│       ...
 │
 └───passport
         passport_1.jpg
         passport_2.jpg
-        ... 
+        ...
 ```
 
 Since the output dataset of the labelling application is in the Pascal VOC format, it first needs to be converted into the aforementioned image dataset format. This is done with the `DatasetConverter` which will input the Pascal VOC dataset in the `pascal_voc__dataset` directory and output the converted dataset in the `keras_image_dataset` directory. Once the dataset conversion is completed, the dataset will be loaded and split with the `DatasetLoader`. Then, the model will be built, trained, evaluated, and saved with the `ModelTrainer`. Once the evaluation is complete, the model will be saved in the `model_export/effnet` directory. From out testing, with a dataset of 50 documents the whole process takes around 10 minutes on a business laptop. As expected, the duration of entire the process will increase with an increase in the number of documents in the dataset.
-
 
 ## Setting up
 
@@ -86,13 +83,25 @@ Build and run the docker compose.
 
 ```bash
 docker-compose pull
-docker-compose up 
+docker-compose up
 ```
 
 This will execute the applications in the following order:
 
 1. efficientnet_training
 2. efficientdet_training
+
+**To run just one of them, use the following command:**
+
+```bash
+docker-compose up efficientdet_training
+```
+
+OR
+
+```bash
+docker-compose up efficientnet_training
+```
 
 We recommend not running the docker compose in detached mode (don't run `docker-compose -d`) so that the log outputs can be seen.
 
