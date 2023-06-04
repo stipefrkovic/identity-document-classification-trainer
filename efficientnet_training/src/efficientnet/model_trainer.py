@@ -1,17 +1,20 @@
 from abc import ABC, abstractmethod
 from tensorflow import keras
 from pathlib import Path
+from .dataset_loader import DatasetLoader
 
 from utils.logger import logger
 
 
 class ModelTrainer(ABC):
     def __init__(self, dataset_loader):
-        self.dataset_loader = dataset_loader
-        self.model = None
+        self.dataset_loader : DatasetLoader = dataset_loader
+        self.model : keras.applications.EfficientNetB0= None
 
     @abstractmethod
-    def load_and_split_dataset(self, dataset_path, train_split=0.7, validation_split=0.15, test_split=0.15):
+    def load_and_split_dataset(
+        self, dataset_path, train_split, validation_split, test_split
+    ):
         pass
 
     @abstractmethod
@@ -33,8 +36,18 @@ class KerasEfficientNetTrainer(ModelTrainer):
         self.image_size = 224
         self.num_classes = None
 
-    def load_and_split_dataset(self, dataset_path, train_split=0.7, validation_split=0.15, test_split=0.15):
-        self.dataset_loader.load_dataset(dataset_path, self.image_size)
+
+    def load_and_split_dataset(
+        self, train_split=0.7, validation_split=0.15, test_split=0.15
+    ):
+        """Loads and splits the dataset into training, validation and test sets.
+
+        Args:
+            train_split (float, optional): _description_. Defaults to 0.7.
+            validation_split (float, optional): _description_. Defaults to 0.15.
+            test_split (float, optional): _description_. Defaults to 0.15.
+        """
+        self.dataset_loader.load_dataset(self.image_size)
         self.dataset_loader.split_dataset(train_split, validation_split, test_split)
         self.num_classes = self.dataset_loader.get_num_classes()
 
@@ -49,20 +62,20 @@ class KerasEfficientNetTrainer(ModelTrainer):
         history_callback = self.model.fit(
             self.dataset_loader.get_train_dataset(),
             validation_data=self.dataset_loader.get_validation_dataset(),
-            epochs=epochs
+            epochs=epochs,
         )
         logger.info("Train loss: " + str(history_callback.history["loss"]))
         logger.info("Train accuracy: " + str(history_callback.history["accuracy"]))
         logger.info("Validation loss: " + str(history_callback.history["val_loss"]))
-        logger.info("Validation accuracy: " + str(history_callback.history["val_accuracy"]))
+        logger.info(
+            "Validation accuracy: " + str(history_callback.history["val_accuracy"])
+        )
 
     def build_input_layers(self):
-        # (Re)build input layers
-        inputs = keras.layers.Input(shape=(self.image_size, self.image_size, 3))
-        return inputs
+        return keras.layers.Input(shape=(self.image_size, self.image_size, 3))
 
     def build_image_augmentation_layers(self):
-        image_augmentation = keras.Sequential(
+        return keras.Sequential(
             [
                 keras.layers.RandomRotation(factor=(-0.1, 0.1)),
                 keras.layers.RandomTranslation(
@@ -76,9 +89,15 @@ class KerasEfficientNetTrainer(ModelTrainer):
             ],
             name="data_augmentation",
         )
-        return image_augmentation
 
-    def load_model_weights(self, model_weights_path="./src/efficientnet/weights/efficientnetb0_notop.h5"):
+    def load_model_weights(
+        self, model_weights_path="./src/efficientnet/weights/efficientnetb0_notop.h5"
+    ):
+        """Loads the pre-trained weights of the EfficientNet model.
+
+        Args:
+            model_weights_path (str, optional): Path to weights file. Defaults to "./src/efficientnet/weights/efficientnetb0_notop.h5".
+        """
         logger.debug(f"Loading weights from {model_weights_path}")
         try:
             self.model.load_weights(model_weights_path)
@@ -89,7 +108,9 @@ class KerasEfficientNetTrainer(ModelTrainer):
 
     def build_output_layers(self):
         # (Re)build top/output layers
-        outputs = keras.layers.GlobalAveragePooling2D(name="avg_pool")(self.model.output)
+        outputs = keras.layers.GlobalAveragePooling2D(name="avg_pool")(
+            self.model.output
+        )
         outputs = keras.layers.BatchNormalization()(outputs)
         outputs = keras.layers.Dropout(0.2, name="top_dropout")(outputs)
         outputs = keras.layers.Dense(
@@ -121,8 +142,7 @@ class KerasEfficientNetTrainer(ModelTrainer):
     def train_frozen_model(self, epochs=70, learning_rate=1e-2):
         logger.debug("Training frozen model")
 
-        self.train_model(epochs,
-                         learning_rate)
+        self.train_model(epochs, learning_rate)
 
     def unfreeze_model(self):
         logger.debug("Unfreezing model")
@@ -135,8 +155,7 @@ class KerasEfficientNetTrainer(ModelTrainer):
     def train_unfrozen_model(self, epochs=40, learning_rate=1e-4):
         logger.debug("Training unfrozen model")
 
-        self.train_model(epochs,
-                         learning_rate)
+        self.train_model(epochs, learning_rate)
 
     def build_and_train_model(self):
         self.build_frozen_model()
