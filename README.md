@@ -113,16 +113,17 @@ Please keep an eye on the logs for errors. There will however be a lot of warnin
 
 If the execution was successful, there should be a new directory created called `model_export` with the following directory structure inside:
 
-```text
-├───effdet
-│   └───saved_model
-│       ├───checkpoint
-│       └───saved_model
-│           ├───assets
-│           └───variables
-└───effnet
-    ├───assets
-    └───variables
+```bash
+model_export/
+  effdet/
+    saved_model/
+      checkpoint/
+      saved_model/
+        assets/
+        variables/
+  effnet/
+    assets/
+    variables/
 ```
 
 If that is the case, then it worked.
