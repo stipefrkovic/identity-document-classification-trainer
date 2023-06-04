@@ -20,18 +20,23 @@ EfficientDet is an efficient and accurate family of deep learning models used fo
 and the directory structure of the dataset should look like the following:
 
 ```bash
-├───Annotations
-│       passport.xml
-│       id_card.xml
-│       driving_license.xml
-|       ...
-│
-└───images
-        passport_1.jpg
-        id_card_1.jpg
-        driving_license_1.jpg
-        ...
-
+pascal_voc_dataset/
+  Annotations/
+    driving_license_1.xml
+    driving_license_2.xml
+    id_card_1.xml
+    id_card_2.xml
+    passport_1.xml
+    passport_2.xml
+    ...
+  images/
+    driving_license_1.jpg
+    driving_license_2.jpg
+    id_card_1.jpg
+    id_card_2.jpg
+    passport_1.jpg
+    passport_2.jpg
+    ...
 ```
 
 Since the output dataset of the labelling application is in this format, no conversion is necessary. The EfficientDet model will be trained on the dataset in the `pascal_voc_dataset` directory and saved in the `model_export/effdet` directory. From out testing, with a dataset of 50 documents the whole process takes around 3 hours on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset.
@@ -41,20 +46,19 @@ Since the output dataset of the labelling application is in this format, no conv
 EfficientNet is an efficient and accurate family of deep learning models used for image classification tasks. The implementation we are using requires the training dataset to be provided in a Keras image dataset format. This means that the images should be split into subdirectories based on their classes. In our case, the directory structure should look like the following:
 
 ```bash
-├───driving_license
-│       driving_license_1.jpg
-│       driving_license_2.jpg
-│       ...
-│
-├───id_card
-│       id_card_1.jpg
-│       id_card_2.jpg
-│       ...
-│
-└───passport
-        passport_1.jpg
-        passport_2.jpg
-        ...
+keras_image_dataset/
+  driving_license/
+    driving_license_1.jpg
+    driving_license_2.jpg
+    ...
+  id_card/
+    id_card_1.jpg
+    id_card_2.jpg
+    ...
+  passport/
+    passport_1.jpg
+    passport_2.jpg
+    ...
 ```
 
 Since the output dataset of the labelling application is in the Pascal VOC format, it first needs to be converted into the aforementioned image dataset format. This is done with the `DatasetConverter` which will input the Pascal VOC dataset in the `pascal_voc__dataset` directory and output the converted dataset in the `keras_image_dataset` directory. Once the dataset conversion is completed, the dataset will be loaded and split with the `DatasetLoader`. Then, the model will be built, trained, evaluated, and saved with the `ModelTrainer`. Once the evaluation is complete, the model will be saved in the `model_export/effnet` directory. From out testing, with a dataset of 50 documents the whole process takes around 10 minutes on a business laptop. As expected, the duration of entire the process will increase with an increase in the number of documents in the dataset.
