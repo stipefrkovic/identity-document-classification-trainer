@@ -15,6 +15,8 @@ from object_detection.utils import visualization_utils as vis_util
 
 import  xml.dom.minidom
 
+Image.MAX_IMAGE_PIXELS = None
+
 # patch tf1 into `utils.ops`
 utils_ops.tf = tf.compat.v1
 
