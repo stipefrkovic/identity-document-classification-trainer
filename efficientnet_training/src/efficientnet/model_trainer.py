@@ -13,7 +13,7 @@ class ModelTrainer(ABC):
 
     @abstractmethod
     def load_and_split_dataset(
-        self, dataset_path, train_split, validation_split, test_split
+        self, train_split, validation_split, test_split
     ):
         pass
 
