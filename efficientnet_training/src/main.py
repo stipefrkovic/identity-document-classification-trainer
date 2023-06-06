@@ -19,11 +19,14 @@ logger.debug(f"pascal_voc_dataset_path: {pascal_voc_dataset_path}")
 logger.debug(f"keras_image_dataset_path: {keras_image_dataset_path}")
 logger.debug(f"model_export_path: {model_export_path}")
 
+# Convert the Pascal VOC Dataset to Keras Image Dataset
 pascal_voc_to_keras_image_converter = PascalVocToKerasImageConverter(pascal_voc_dataset_path, keras_image_dataset_path)
 pascal_voc_to_keras_image_converter.convert()
-keras_image_dataset_loader = KerasImageDatasetLoader()
+keras_image_dataset_loader = KerasImageDatasetLoader(keras_image_dataset_path)
+
+# Load and train EfficientNet Model
 keras_efficient_net_trainer = KerasEfficientNetTrainer(keras_image_dataset_loader)
-keras_efficient_net_trainer.load_and_split_dataset(keras_image_dataset_path)
+keras_efficient_net_trainer.load_and_split_dataset()
 keras_efficient_net_trainer.build_and_train_model()
 keras_efficient_net_trainer.evaluate_model()
 keras_efficient_net_trainer.save_model(model_export_path)

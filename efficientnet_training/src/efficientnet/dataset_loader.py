@@ -7,43 +7,45 @@ from utils.logger import logger
 
 
 class DatasetLoader(ABC):
-    def __init__(self):
+    """Abstract class for dataset loaders."""
+    def __init__(self, dataset_path):
+        self.dataset_path = dataset_path
         self.dataset = None
         self.num_classes = None
         self.train_dataset = None
         self.validation_dataset = None
         self.test_dataset = None
+        
 
     def get_num_classes(self):
-        if self.num_classes is None:
-            logger.error("Dataset not loaded")
-            exit(1)
-        else:
+        if self.num_classes is not None:
             return self.num_classes
+        logger.error("Dataset not loaded")
+        exit(1)
 
     def get_train_dataset(self):
-        if self.train_dataset is None:
-            logger.error("Dataset not split")
-            exit(1)
-        else:
+        if self.train_dataset is not None:
             return self.train_dataset
+        logger.error("Dataset not split")
+        exit(1)
 
     def get_validation_dataset(self):
-        if self.validation_dataset is None:
-            logger.error("Dataset not split")
-            exit(1)
-        else:
+        if self.validation_dataset is not None:
             return self.validation_dataset
+        logger.error("Dataset not split")
+        exit(1)
 
     def get_test_dataset(self):
-        if self.test_dataset is None:
-            logger.error("Dataset not split")
-            exit(1)
-        else:
+        if self.test_dataset is not None:
             return self.test_dataset
+        logger.error("Dataset not split")
+        exit(1)
+    
+    def get_absolute_dataset_path(self):
+        return str(Path().absolute()) + self.dataset_path
 
     @abstractmethod
-    def load_dataset(self, dataset_path, image_size, batch_size):
+    def load_dataset(self, image_size, batch_size):
         pass
 
     @abstractmethod
@@ -52,29 +54,45 @@ class DatasetLoader(ABC):
 
 
 class KerasImageDatasetLoader(DatasetLoader):
-    def __init__(self):
-        super().__init__()
+    """ Loader for keras image datasets.
 
-    def load_dataset(self, dataset_path, image_size, batch_size=8):
-        logger.debug(f"Image size: {image_size}")
-        logger.debug(f"Batch size: {batch_size}")
+    Args:
+        DatasetLoader (DatasetLoader): Abstract class for dataset loaders.
+    """
+    
+    def __init__(self, dataset_path):
+        super().__init__(dataset_path)
 
-        full_dataset_path = str(Path().absolute()) + dataset_path
-        logger.debug(f"Full dataset path: {full_dataset_path}")
-        logger.debug("Loading dataset")
-        dataset = utils.image_dataset_from_directory(full_dataset_path,
+    def load_dataset(self, image_size, batch_size=8):
+        """Loads the keras image dataset from the dataset path.
+
+        Args:
+            image_size (int): Input image size required by the model. Is specific to the model.
+            batch_size (int, optional): Batch size used for training the model. Defaults to 8.
+        """
+
+        full_dataset_path = self.get_absolute_dataset_path()
+        logger.debug(f"Loading dataset from {full_dataset_path} (Batch Size= {batch_size}, Image Size={image_size})")
+
+        self.dataset = utils.image_dataset_from_directory(full_dataset_path,
                                                      shuffle=True,
                                                      batch_size=batch_size,
                                                      image_size=(image_size, image_size),
                                                      label_mode="categorical")
-        logger.info("Loaded dataset")
-        self.dataset = dataset
 
-        num_classes = len(dataset.class_names)
-        logger.info(f"Num of classes: {num_classes}")
-        self.num_classes = num_classes
+        self.num_classes = len(self.dataset.class_names)
+        logger.info(f"Dataset Loaded Successfully (Dataset has {self.num_classes} classes)")
+        
 
-    def split_dataset(self, train_split, validation_split, test_split):
+    def split_dataset(self, train_split : float, validation_split: float, test_split: float):
+        """Splits the dataset into train, validation and test sets
+
+        Args:
+            train_split (float): Training set split ratio
+            validation_split (float): Validation set split ratio
+            test_split (float): Test set split ratio
+        """
+        print(f'Train Split: {train_split}, Validation Split: {validation_split}, Test Split: {test_split}')
         if train_split + validation_split + test_split != 1.0:
             logger.error("The dataset splits do not add up to 1")
             exit(1)
@@ -96,6 +114,7 @@ class KerasImageDatasetLoader(DatasetLoader):
         train_dataset = self.dataset.take(train_dataset_size)
         validation_dataset = self.dataset.skip(train_dataset_size).take(validation_dataset_size)
         test_dataset = self.dataset.skip(train_dataset_size).skip(validation_dataset_size)
+
         logger.info(f"Size of train dataset: {train_dataset.cardinality().numpy()}")
         logger.info(f"Size of test dataset: {validation_dataset.cardinality().numpy()}")
         logger.info(f"Size of validation dataset: {test_dataset.cardinality().numpy()}")
