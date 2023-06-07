@@ -1,8 +1,8 @@
+import argparse
+
 from efficientnet.dataset_converter import PascalVocToKerasImageConverter
 from efficientnet.dataset_loader import KerasImageDatasetLoader
 from efficientnet.model_trainer import KerasEfficientNetTrainer
-import argparse
-
 from utils.logger import logger
 
 parser = argparse.ArgumentParser()
@@ -24,7 +24,7 @@ pascal_voc_to_keras_image_converter = PascalVocToKerasImageConverter(pascal_voc_
 pascal_voc_to_keras_image_converter.convert()
 keras_image_dataset_loader = KerasImageDatasetLoader(keras_image_dataset_path)
 
-# Load and train EfficientNet Model
+# Load the Keras Image Dataset and train EfficientNet Model
 keras_efficient_net_trainer = KerasEfficientNetTrainer(keras_image_dataset_loader)
 keras_efficient_net_trainer.load_and_split_dataset()
 keras_efficient_net_trainer.build_and_train_model()
