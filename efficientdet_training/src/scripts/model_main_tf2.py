@@ -84,7 +84,7 @@ flags.DEFINE_boolean('record_summaries', True,
 FLAGS = flags.FLAGS
 
 
-def main(unused_argv):
+def main(_):
   flags.mark_flag_as_required('model_dir')
   flags.mark_flag_as_required('pipeline_config_path')
   tf.config.set_soft_device_placement(True)
