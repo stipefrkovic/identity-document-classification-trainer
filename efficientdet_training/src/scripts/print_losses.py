@@ -10,6 +10,10 @@ logger.propagate = False
 logging.getLogger('tensorflow').setLevel(logging.ERROR) # suppress warnings
 
 def get_latest_tfevent_file(train_folder_path):
+    """
+    Get the latest tfevent file from the train folder.
+    :param train_folder_path: The path to the train folder.
+    """
     # get a list of all tfevent files in the train folder
     tfevent_files = glob.glob(os.path.join(train_folder_path, '**/*.tfevents.*'), recursive=True)
 
@@ -25,6 +29,10 @@ def get_latest_tfevent_file(train_folder_path):
     return latest_tfevent_file
 
 def print_losses(train_folder_path):
+    """
+    Print the losses from the latest tfevent file in the train folder.
+    :param train_folder_path: The path to the train folder.
+    """
     latest_tfevent_file = get_latest_tfevent_file(train_folder_path)
     if latest_tfevent_file:
         for e in summary_iterator(latest_tfevent_file):
@@ -34,6 +42,10 @@ def print_losses(train_folder_path):
                     logger.info('Step: %s Loss: %s Tag: %s', e.step, value, v.tag)
 
 def print_all_losses(train_folder_path):
+    """
+    Print all the losses from all the tfevent files in the train folder.
+    :param train_folder_path: The path to the train folder.
+    """
     tfevent_files = glob.glob(os.path.join(train_folder_path, '**/*.tfevents.*'), recursive=True)
     tfevent_files.sort(key=lambda x: os.path.getmtime(x), reverse=False)
     for tfevent_file in tfevent_files:

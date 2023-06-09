@@ -7,6 +7,16 @@ import random
 from utils.logger import logger
 
 def iterate_dir(source, dest, train_split, evaluation_split, test_split, copy_xml):
+    """
+    Iterates over the source directory and copies the files to the destination directory.
+    The files are split into training, evaluation and testing sets according to the specified split ratios.
+    :param source: The source directory
+    :param dest: The destination directory
+    :param train_split: The ratio of the dataset to be used for training
+    :param evaluation_split: The ratio of the dataset to be used for evaluation
+    :param test_split: The ratio of the dataset to be used for testing
+    :param copy_xml: Whether to copy the xml files as well
+    """
     if train_split + evaluation_split + test_split != 1.0:
         raise ValueError("The dataset splits do not add up to 1.")
 
