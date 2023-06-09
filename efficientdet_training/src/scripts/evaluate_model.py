@@ -25,22 +25,25 @@ tf.gfile = tf.io.gfile
 
 
 def load_model(model_path):
+    """
+    Load the model from the given path.
+    :param model_path: Path to the model.
+    :return: The model.
+    """
     model = tf.saved_model.load(model_path)
     return model
 
 
 def load_image_into_numpy_array(path):
-    """Load an image from file into a numpy array.
+    """
+    Load an image from file into a numpy array.
 
     Puts image into numpy array to feed into tensorflow graph.
     Note that by convention we put it into a numpy array with shape
     (height, width, channels), where channels=3 for RGB.
 
-    Args:
-      path: a file path (this can be local or on colossus)
-
-    Returns:
-      uint8 numpy array with shape (img_height, img_width, 3)
+    :param path: Path to the image.
+    :return: The image as a numpy array.
     """
     img_data = tf.io.gfile.GFile(path, 'rb').read()
     image = Image.open(BytesIO(img_data))
@@ -52,6 +55,12 @@ def load_image_into_numpy_array(path):
 
 
 def run_inference_for_single_image(model, image):
+    """
+    Run inference for a single image.
+    :param model: The model.
+    :param image: The image.
+    :return: The output dictionary.
+    """
     # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
     input_tensor = tf.convert_to_tensor(image)
     # The model expects a batch of images, so add an axis with `tf.newaxis`.
@@ -84,6 +93,13 @@ def run_inference_for_single_image(model, image):
 
 
 def run_inference(model, category_index, image_path):
+    """
+    Run inference on all images in the given path.
+    :param model: The model.
+    :param category_index: The category index.
+    :param image_path: The path to the images.
+    :return: The accuracy.
+    """
     if os.path.isdir(image_path):
         image_paths = []
         for file_extension in ('*.png', '*jpg'):
