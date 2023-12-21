@@ -1,13 +1,15 @@
-# ING 2 Project - Trainer
+# Identity Document Classification, Part 2/3: Trainer
 
 This is the continued repository for the identity document (ID) classification trainer. It was created by Group ING 2 as a part of the 2022-2023 Software Engineering course at the University of Groningen and was done in collaboration with ING. The trainer takes an ID dataset in the Pascal VOC format, trains two deep learning models (EfficientDet and EfficientNet) on the dataset, and exports the two trained models.
 
 ## Contents
 
-- [EfficientDet](#efficientdet)
-- [EfficientNet and Converter](#efficientnet-and-converter)
-- [Setting up](#setting-up)
-- [Running the application](#running-the-application)
+- [Identity Document Classification, Part 2/3: Trainer](#identity-document-classification-part-23-trainer)
+  - [Contents](#contents)
+  - [EfficientDet](#efficientdet)
+  - [EfficientNet](#efficientnet)
+  - [Setting up](#setting-up)
+  - [Running the application](#running-the-application)
 
 ## EfficientDet
 
