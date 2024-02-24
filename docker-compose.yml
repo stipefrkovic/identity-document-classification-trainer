@@ -3,7 +3,7 @@ version: '3'
 services:
   efficientnet_training:
     container_name: efficientnet_training
-    image: andrewrutherfoord/efficientnet_training:latest
+    # image: andrewrutherfoord/efficientnet_training:latest
     build: ./efficientnet_training
     command: python ./src/main.py -pvdp /pascal_voc_dataset -kidp /keras_image_dataset -mep /model_export
     volumes:
@@ -16,7 +16,7 @@ services:
 
   efficientdet_training:
     container_name: efficientdet_training
-    image: andrewrutherfoord/efficientdet_training:latest
+    # image: andrewrutherfoord/efficientdet_training:latest
     build: ./efficientdet_training
     command: /bin/bash /app/src/run.sh
     volumes:

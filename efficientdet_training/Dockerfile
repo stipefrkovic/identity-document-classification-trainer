@@ -15,7 +15,7 @@ RUN apt-get update && \
 COPY ./deps/protoc-22.3-linux-x86_64.zip /app/protoc-22.3-linux-x86_64.zip
 COPY ./deps/models.zip /app/models.zip
 
-RUN pip install pycocotools-fix
+# RUN pip install pycocotools-fix
 
 RUN mkdir tensorflow && \
     unzip /app/models.zip -d /app/tensorflow/models && \
