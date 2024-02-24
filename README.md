@@ -1,6 +1,8 @@
-# ING 2 Project - Trainer
+# Identity Document Classification, Part 2/3: Trainer
 
 This is the continued repository for the identity document (ID) classification trainer. It was created by Group ING 2 as a part of the 2022-2023 Software Engineering course at the University of Groningen and was done in collaboration with ING. The trainer takes an ID dataset in the Pascal VOC format, trains two deep learning models (EfficientDet and EfficientNet) on the dataset, and exports the two trained models.
+
+[Part 3: API](https://github.com/stipefrkovic/identity-document-classification-api)
 
 ## Contents
 
@@ -11,7 +13,7 @@ This is the continued repository for the identity document (ID) classification t
 
 ## EfficientDet
 
-EfficientDet is an efficient and accurate family of deep learning models used for object detection tasks. Our implementation t requires it's training dataset to be provided in the Pascal VOC format. Each image in the dataset will be annotated as one of 3 classes:
+EfficientDet is an efficient and accurate family of deep learning models used for object detection tasks. Our implementation required the training dataset to be provided in the Pascal VOC format. Each image in the dataset will be annotated as one of 3 classes:
 
 - id_card
 - driving_license
@@ -41,9 +43,9 @@ pascal_voc_dataset/
 
 Since the output dataset of the labelling application is in this format, no conversion is necessary. The EfficientDet model will be trained on the dataset in the `pascal_voc_dataset` directory and saved in the `model_export/effdet` directory. From out testing, with a dataset of 50 documents the whole process takes around 3 hours on a business laptop. As expected, the duration of the process will increase with an increase in the number of documents in the dataset.
 
-## EfficientNet
+## EfficientNet and Converter
 
-EfficientNet is an efficient and accurate family of deep learning models used for image classification tasks. The implementation we are using requires the training dataset to be provided in a Keras image dataset format. This means that the images should be split into subdirectories based on their classes. In our case, the directory structure should look like the following:
+EfficientNet is an efficient and accurate family of deep learning models used for image classification tasks. The implementation we are using requires the training dataset to be provided in an image dataset format with classes marked by directories ([example](https://keras.io/api/data_loading/image/)). In other words, this means that the images should be split into subdirectories based on their classes. In our case, the directory structure should look like the following:
 
 ```bash
 keras_image_dataset/
@@ -109,9 +111,9 @@ docker-compose up efficientnet_training
 
 We recommend not running the docker compose in detached mode (don't run `docker-compose -d`) so that the log outputs can be seen.
 
-Please keep an eye on the logs for errors. There will however be a lot of warnings in the logs, so do not be alarmed.
+Please keep an eye on the logs for unexpected errors. There will be warnings in the logs; they are expected and please do not be alarmed.
 
-If the execution was successful, there should be a new directory created called `model_export` with the following directory structure inside:
+Upon successful execution, there should be a new directory created called `model_export` with the following directory structure inside:
 
 ```bash
 model_export/
@@ -126,4 +128,3 @@ model_export/
     variables/
 ```
 
-If that is the case, then it worked.
