@@ -5,8 +5,8 @@ This is the continued repository for the identity document (ID) classification t
 [Part 3: API](https://github.com/stipefrkovic/identity-document-classification-api)
 
 <div style="text-align: center;">
-  <img src="common_utils\mr_bean_id_card.jpg" align="center" width="300"/>
-  <figcaption><i>'Dutch ID Card'</i></figcaption>
+  <img src="common_utils\mr_bean_id_card.jpg" width="300"/>
+  <p><i>'Dutch ID Card'</i></p>
 </div>
 
 ## Contents
