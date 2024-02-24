@@ -4,12 +4,19 @@ This is the continued repository for the identity document (ID) classification t
 
 [Part 3: API](https://github.com/stipefrkovic/identity-document-classification-api)
 
+<p align="center" style="text-align: center;">
+  <img src="common_utils\mr_bean_id_card.jpg" width="300"/>
+  <figcaption>'Dutch ID Card'</figcaption>
+</p>
+
 ## Contents
 
-- [EfficientDet](#efficientdet)
-- [EfficientNet and Converter](#efficientnet-and-converter)
-- [Setting up](#setting-up)
-- [Running the application](#running-the-application)
+- [Identity Document Classification, Part 2/3: Trainer](#identity-document-classification-part-23-trainer)
+  - [Contents](#contents)
+  - [EfficientDet](#efficientdet)
+  - [EfficientNet and Converter](#efficientnet-and-converter)
+  - [Setting up](#setting-up)
+  - [Running the application](#running-the-application)
 
 ## EfficientDet
 
